@@ -36,19 +36,18 @@
   --text: #1f2937;
   --text-dim: #4b5563;
   --text-faint: #6b7280;
-  --pastel-blue: #dbeafe;
-  --pastel-blue-text: #1e40af;
-  --pastel-green: #d1fae5;
-  --pastel-green-text: #065f46;
   --pastel-amber: #fef3c7;
   --pastel-amber-text: #92400e;
+  --pastel-green: #d1fae5;
+  --pastel-green-text: #065f46;
   --gold: #f59e0b;
   --gold-soft: #fef3c7;
+  --wsp-green: #25d366;
+  --wsp-green-dark: #1da851;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body {
-  background: var(--bg);
-  color: var(--text);
+  background: var(--bg); color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 15px; line-height: 1.5; min-height: 100vh;
   overscroll-behavior-y: contain;
@@ -67,12 +66,9 @@ header.top {
 .brand .logo {
   width: 40px; height: 40px; border-radius: 10px;
   background: var(--nov-red);
-  display: grid; place-items: center;
-  font-weight: 800; font-size: 13px; color: white; letter-spacing: -0.5px;
-  box-shadow: 0 2px 8px rgba(200, 16, 46, 0.25);
   background-image: url('icon-192.png');
-  background-size: cover;
-  background-position: center;
+  background-size: cover; background-position: center;
+  box-shadow: 0 2px 8px rgba(200, 16, 46, 0.25);
 }
 .brand h1 {
   font-size: 14px; font-weight: 700;
@@ -116,10 +112,11 @@ header.top {
 }
 .tab {
   flex: 1; background: transparent; border: none; color: var(--text-dim);
-  font-family: inherit; font-size: 13px; font-weight: 600;
-  padding: 10px 8px; border-radius: 7px; cursor: pointer;
+  font-family: inherit; font-size: 12px; font-weight: 600;
+  padding: 10px 6px; border-radius: 7px; cursor: pointer;
   transition: all 0.15s;
-  display: flex; align-items: center; justify-content: center; gap: 5px;
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  white-space: nowrap;
 }
 .tab.active {
   background: var(--bg-card); color: var(--nov-red);
@@ -133,6 +130,53 @@ header.top {
 }
 .tab.active .badge { background: var(--nov-red-soft); color: var(--nov-red); }
 
+/* === WO field (arriba del form) === */
+.wo-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--nov-red);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.wo-label {
+  font-size: 11px; font-weight: 700;
+  color: var(--nov-red);
+  letter-spacing: 0.05em; text-transform: uppercase;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 6px;
+}
+.wo-input-wrap {
+  display: flex; gap: 8px; align-items: stretch;
+}
+.wo-input {
+  flex: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gray-900);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  letter-spacing: 0.02em;
+}
+.wo-input:focus { border-color: var(--nov-red); box-shadow: 0 0 0 3px var(--nov-red-soft); }
+.wo-input::placeholder { color: var(--gray-400); font-weight: 400; }
+.wo-prefix {
+  font-size: 13px; font-weight: 700;
+  color: var(--nov-red);
+  display: grid; place-items: center;
+  padding: 0 4px;
+  background: var(--nov-red-soft);
+  border-radius: 8px;
+  border: 1px solid var(--nov-red-soft-2);
+}
+
+/* === FORM === */
 .form-block { display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px; }
 .field { display: flex; flex-direction: column; gap: 6px; }
 .field-label {
@@ -162,10 +206,7 @@ select.select {
   transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
   box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
-select.select:focus {
-  border-color: var(--nov-red);
-  box-shadow: 0 0 0 3px var(--nov-red-soft);
-}
+select.select:focus { border-color: var(--nov-red); box-shadow: 0 0 0 3px var(--nov-red-soft); }
 select.select.filled {
   border-color: var(--nov-red);
   background: var(--nov-red-soft);
@@ -202,12 +243,7 @@ select.select:disabled {
 }
 .reset-btn:hover { border-color: var(--nov-red); color: var(--nov-red); }
 
-/* Star button (favorito) integrado en el select de subcódigo */
-.sub-row-with-star {
-  display: flex;
-  gap: 8px;
-  align-items: stretch;
-}
+.sub-row-with-star { display: flex; gap: 8px; align-items: stretch; }
 .sub-row-with-star .select-wrap { flex: 1; }
 .star-btn {
   background: var(--bg-card);
@@ -229,7 +265,6 @@ select.select:disabled {
   border-color: var(--gold);
   color: var(--gold);
 }
-.star-btn.active:hover { background: var(--gold); color: white; }
 
 .final-card {
   background: var(--bg-card);
@@ -243,8 +278,7 @@ select.select:disabled {
   background: var(--nov-red);
   padding: 14px 16px;
   display: flex; align-items: center; gap: 10px;
-  font-weight: 700; font-size: 13px;
-  color: white;
+  font-weight: 700; font-size: 13px; color: white;
   letter-spacing: -0.01em;
 }
 .final-header svg { flex-shrink: 0; }
@@ -260,8 +294,7 @@ select.select:disabled {
 .final-row .label-col {
   flex: 0 0 140px;
   padding: 14px 12px 14px 16px;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 12px; font-weight: 600;
   color: var(--gray-700);
   background: var(--bg-soft);
   border-right: 1px solid var(--gray-100);
@@ -286,6 +319,7 @@ select.select:disabled {
   color: var(--gray-400); font-style: italic;
   font-weight: 400; font-size: 13px;
 }
+
 .copy-btn {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -301,9 +335,8 @@ select.select:disabled {
   flex-shrink: 0;
 }
 .copy-btn:hover { border-color: var(--nov-red); color: var(--nov-red); background: var(--nov-red-soft); }
-.copy-btn.copied {
-  background: var(--pastel-green); border-color: var(--pastel-green-text); color: var(--pastel-green-text);
-}
+.copy-btn.copied { background: var(--pastel-green); border-color: var(--pastel-green-text); color: var(--pastel-green-text); }
+
 .final-actions {
   padding: 14px 16px;
   background: var(--nov-red-soft);
@@ -320,6 +353,19 @@ select.select:disabled {
 }
 .btn-primary:hover { background: var(--nov-red-dark); }
 .btn-primary.copied { background: var(--pastel-green-text); border-color: var(--pastel-green-text); color: white; }
+.btn-share {
+  background: var(--wsp-green); border: 1px solid var(--wsp-green);
+  color: white; padding: 12px 16px; border-radius: 8px;
+  cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 700;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.15s; flex: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.btn-share:hover { background: var(--wsp-green-dark); }
+.btn-share:disabled {
+  background: var(--gray-300); border-color: var(--gray-300);
+  cursor: not-allowed;
+}
 
 .section-title {
   font-size: 12px; font-weight: 700;
@@ -356,15 +402,13 @@ select.select:disabled {
   font-size: 10px; font-weight: 700;
   color: var(--nov-red);
   margin-bottom: 3px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  letter-spacing: 0.05em; text-transform: uppercase;
 }
 mark { background: var(--pastel-amber); color: var(--pastel-amber-text); padding: 0 2px; border-radius: 3px; font-weight: 600; }
 
-.fav-card {
+.fav-card, .hist-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-left: 3px solid var(--gold);
   border-radius: 10px;
   padding: 14px;
   margin-bottom: 8px;
@@ -373,20 +417,29 @@ mark { background: var(--pastel-amber); color: var(--pastel-amber-text); padding
   flex-direction: column;
   gap: 10px;
 }
-.fav-path {
+.fav-card { border-left: 3px solid var(--gold); }
+.hist-card { border-left: 3px solid var(--wsp-green); }
+.hist-wo {
+  font-size: 16px; font-weight: 800;
+  color: var(--nov-red);
+  letter-spacing: 0.02em;
+}
+.hist-date {
+  font-size: 11px; color: var(--text-faint);
+}
+.fav-path, .hist-path {
   font-size: 11px; color: var(--text-faint);
   display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
 }
-.fav-path .pseg { color: var(--text-dim); }
+.fav-path .pseg, .hist-path .pseg { color: var(--text-dim); }
 .fav-path .psep { color: var(--gold); font-weight: 700; }
-.fav-content {
-  display: flex; align-items: flex-start; gap: 10px;
-}
-.fav-text { flex: 1; min-width: 0; }
-.fav-en { font-size: 14px; font-weight: 600; color: var(--gray-900); word-break: break-word; }
-.fav-es { font-size: 12px; color: var(--text-faint); margin-top: 2px; word-break: break-word; font-style: italic; }
-.fav-actions { display: flex; gap: 6px; flex-wrap: wrap; }
-.fav-actions .copy-btn { flex: 1; justify-content: center; }
+.hist-path .psep { color: var(--wsp-green); font-weight: 700; }
+.fav-content, .hist-content { display: flex; align-items: flex-start; gap: 10px; }
+.fav-text, .hist-text { flex: 1; min-width: 0; }
+.fav-en, .hist-en { font-size: 14px; font-weight: 600; color: var(--gray-900); word-break: break-word; }
+.fav-es, .hist-es { font-size: 12px; color: var(--text-faint); margin-top: 2px; word-break: break-word; font-style: italic; }
+.fav-actions, .hist-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.fav-actions .copy-btn, .fav-actions .btn-load { flex: 1; justify-content: center; }
 .btn-load {
   background: var(--gold); border: 1px solid var(--gold);
   color: white; padding: 8px 12px;
@@ -394,9 +447,18 @@ mark { background: var(--pastel-amber); color: var(--pastel-amber-text); padding
   font-family: inherit; font-size: 12px; font-weight: 700;
   display: inline-flex; align-items: center; gap: 6px;
   transition: all 0.15s;
-  flex: 1; justify-content: center;
 }
 .btn-load:hover { background: #d97706; }
+.btn-share-small {
+  background: var(--wsp-green); border: 1px solid var(--wsp-green);
+  color: white; padding: 8px 12px;
+  border-radius: 8px; cursor: pointer;
+  font-family: inherit; font-size: 12px; font-weight: 700;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: all 0.15s;
+  flex: 1; justify-content: center;
+}
+.btn-share-small:hover { background: var(--wsp-green-dark); }
 .btn-remove {
   background: transparent;
   border: 1px solid var(--border);
@@ -410,6 +472,12 @@ mark { background: var(--pastel-amber); color: var(--pastel-amber-text); padding
   flex-shrink: 0;
 }
 .btn-remove:hover { border-color: var(--nov-red); color: var(--nov-red); background: var(--nov-red-soft); }
+
+.hist-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--gray-100);
+  padding-bottom: 8px;
+}
 
 .empty {
   text-align: center;
@@ -435,6 +503,7 @@ mark { background: var(--pastel-amber); color: var(--pastel-amber-text); padding
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
 .toast.gold { background: var(--gold); }
+.toast.green { background: var(--wsp-green); }
 
 footer.bottom {
   margin-top: 32px; padding-top: 16px;
@@ -452,7 +521,8 @@ footer.bottom {
   .final-row .label-col { flex: 0 0 110px; font-size: 11px; padding: 12px 10px 12px 14px; }
   .final-row .value-col { padding: 10px; }
   .star-btn { width: 44px; font-size: 20px; }
-  .tab { font-size: 12px; padding: 10px 4px; }
+  .tab { font-size: 11px; padding: 10px 4px; }
+  .btn-share, .btn-primary { font-size: 12px; padding: 12px 10px; }
 }
 </style>
 </head>
@@ -476,7 +546,8 @@ footer.bottom {
     <div class="tabs" id="tabs">
       <button class="tab active" data-mode="form">Formulario</button>
       <button class="tab" data-mode="search">Buscar</button>
-      <button class="tab" data-mode="favs">⭐ Favoritos<span class="badge" id="favBadge" style="display:none">0</span></button>
+      <button class="tab" data-mode="favs">⭐<span class="badge" id="favBadge" style="display:none">0</span></button>
+      <button class="tab" data-mode="history">📋 Historial<span class="badge" id="histBadge" style="display:none">0</span></button>
     </div>
   </header>
 
@@ -497,6 +568,9 @@ const ALIASES = {
 };
 
 const FAV_KEY = 'novmdtotco_favs_v1';
+const HIST_KEY = 'novmdtotco_hist_v1';
+const WO_KEY = 'novmdtotco_currentwo_v1';
+const HIST_MAX = 5;
 
 const state = {
   mode: 'form',
@@ -505,56 +579,70 @@ const state = {
   codeIdx: -1,
   subIdx: -1,
   query: '',
-  favs: []
+  favs: [],
+  history: [],
+  woNumber: ''
 };
 
-// === Persistencia favoritos ===
-function loadFavs() {
-  try {
-    const raw = localStorage.getItem(FAV_KEY);
-    state.favs = raw ? JSON.parse(raw) : [];
-  } catch(e) { state.favs = []; }
+// === Storage ===
+function loadAll() {
+  try { state.favs = JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); } catch(e) { state.favs = []; }
+  try { state.history = JSON.parse(localStorage.getItem(HIST_KEY) || '[]'); } catch(e) { state.history = []; }
+  try { state.woNumber = localStorage.getItem(WO_KEY) || ''; } catch(e) { state.woNumber = ''; }
 }
-function saveFavs() {
-  try { localStorage.setItem(FAV_KEY, JSON.stringify(state.favs)); } catch(e) {}
-  updateFavBadge();
-}
-function updateFavBadge() {
-  const b = document.getElementById('favBadge');
-  if (!b) return;
-  if (state.favs.length > 0) {
-    b.style.display = '';
-    b.textContent = state.favs.length;
-  } else {
-    b.style.display = 'none';
+function saveFavs() { try { localStorage.setItem(FAV_KEY, JSON.stringify(state.favs)); } catch(e){} updateBadges(); }
+function saveHistory() { try { localStorage.setItem(HIST_KEY, JSON.stringify(state.history)); } catch(e){} updateBadges(); }
+function saveWO() { try { localStorage.setItem(WO_KEY, state.woNumber); } catch(e){} }
+
+function updateBadges() {
+  const fb = document.getElementById('favBadge');
+  if (fb) {
+    if (state.favs.length > 0) { fb.style.display = ''; fb.textContent = state.favs.length; }
+    else fb.style.display = 'none';
+  }
+  const hb = document.getElementById('histBadge');
+  if (hb) {
+    if (state.history.length > 0) { hb.style.display = ''; hb.textContent = state.history.length; }
+    else hb.style.display = 'none';
   }
 }
+
 function favKey(catEn, typEn, codeEn, subEn) {
   return [catEn, typEn, codeEn, subEn].join(' ▸ ');
 }
 function isFav(catEn, typEn, codeEn, subEn) {
-  const k = favKey(catEn, typEn, codeEn, subEn);
-  return state.favs.some(f => f.key === k);
+  return state.favs.some(f => f.key === favKey(catEn, typEn, codeEn, subEn));
 }
 function toggleFav(cat, typ, code, sub) {
   const k = favKey(cat.en, typ.en, code.en, sub.en);
   const idx = state.favs.findIndex(f => f.key === k);
-  if (idx >= 0) {
-    state.favs.splice(idx, 1);
-    saveFavs();
-    return false;
-  } else {
-    state.favs.unshift({
-      key: k,
-      cat: { en: cat.en, es: cat.es },
-      typ: { en: typ.en, es: typ.es },
-      code: { en: code.en, es: code.es },
-      sub: { en: sub.en, es: sub.es },
-      ts: Date.now()
-    });
-    saveFavs();
-    return true;
-  }
+  if (idx >= 0) { state.favs.splice(idx, 1); saveFavs(); return false; }
+  state.favs.unshift({
+    key: k,
+    cat: { en: cat.en, es: cat.es },
+    typ: { en: typ.en, es: typ.es },
+    code: { en: code.en, es: code.es },
+    sub: { en: sub.en, es: sub.es },
+    ts: Date.now()
+  });
+  saveFavs();
+  return true;
+}
+
+function addToHistory(wo, cat, typ, code, sub) {
+  // Remover duplicado por número de WO
+  state.history = state.history.filter(h => h.wo !== wo);
+  state.history.unshift({
+    wo: wo,
+    cat: { en: cat.en, es: cat.es },
+    typ: { en: typ.en, es: typ.es },
+    code: { en: code.en, es: code.es },
+    sub: { en: sub.en, es: sub.es },
+    ts: Date.now()
+  });
+  // Mantener solo las últimas N
+  if (state.history.length > HIST_MAX) state.history = state.history.slice(0, HIST_MAX);
+  saveHistory();
 }
 
 const $ = (sel) => document.querySelector(sel);
@@ -569,9 +657,7 @@ function normalize(s) {
 function escapeHtml(s) {
   return (s || '').toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-function escapeAttr(s) {
-  return escapeHtml(s).replace(/\n/g, ' ');
-}
+function escapeAttr(s) { return escapeHtml(s).replace(/\n/g, ' '); }
 function highlight(text, q) {
   if (!q) return escapeHtml(text);
   const nText = normalize(text); const nQ = normalize(q);
@@ -587,9 +673,10 @@ function highlight(text, q) {
   return escapeHtml(text.slice(0, startOrig)) + '<mark>' + escapeHtml(text.slice(startOrig, endOrig)) + '</mark>' + escapeHtml(text.slice(endOrig));
 }
 
-function showToast(msg, gold = false) {
+function showToast(msg, variant) {
   toast.textContent = msg;
-  toast.classList.toggle('gold', gold);
+  toast.classList.remove('gold', 'green');
+  if (variant) toast.classList.add(variant);
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 1700);
 }
@@ -619,14 +706,67 @@ function fallbackCopy(text, cb) {
   document.body.removeChild(ta);
 }
 
+function buildShareMessage(wo, cat, typ, code, sub) {
+  let msg = '✅ WO-' + wo + ' completada en RESCO\n\n';
+  msg += '📋 *Detalle del incidente:*\n';
+  msg += '• Category: ' + cat.en + '\n';
+  msg += '• Type: ' + typ.en + '\n';
+  msg += '• Code: ' + code.en + '\n';
+  msg += '• Sub: ' + sub.en;
+  return msg;
+}
+
+async function shareIncident(wo, cat, typ, code, sub, btn) {
+  const text = buildShareMessage(wo, cat, typ, code, sub);
+  const data = {
+    title: 'WO-' + wo + ' completada',
+    text: text
+  };
+
+  if (navigator.share) {
+    try {
+      await navigator.share(data);
+      // Guardar en historial al compartir exitosamente
+      addToHistory(wo, cat, typ, code, sub);
+      showToast('✅ Compartido y guardado en historial', 'green');
+    } catch(err) {
+      if (err.name !== 'AbortError') {
+        // Fallback si share falla
+        copyText(text, btn);
+        addToHistory(wo, cat, typ, code, sub);
+      }
+    }
+  } else {
+    // Navegador sin Web Share API: copiar al portapapeles + intentar wa.me
+    copyText(text, btn);
+    addToHistory(wo, cat, typ, code, sub);
+    // También intentar abrir WhatsApp directo
+    const waUrl = 'https://wa.me/?text=' + encodeURIComponent(text);
+    setTimeout(() => window.open(waUrl, '_blank'), 300);
+  }
+}
+
 function renderFinalCard(cat, typ, code, sub) {
   const complete = cat && typ && code && sub;
+  const wo = state.woNumber.trim();
+  const canShare = complete && wo;
+
   let html = '<div class="final-card">';
   html += '<div class="final-header">';
   html += '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
   html += complete ? 'Resumen — Listo para cargar al sistema' : 'Resumen — Selección incompleta';
   html += '</div>';
   html += '<div class="final-rows">';
+
+  // Mostrar WO arriba si está cargada
+  if (wo) {
+    html += '<div class="final-row">';
+    html += '<div class="label-col">WO</div>';
+    html += '<div class="value-col">';
+    html += '<div class="value-text"><div class="final-en" style="color:var(--nov-red)">WO-' + escapeHtml(wo) + '</div></div>';
+    html += '<button class="copy-btn" data-copy="WO-' + escapeAttr(wo) + '"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>Copiar</span></button>';
+    html += '</div></div>';
+  }
 
   const rows = [
     { label: 'Incident Category', en: cat ? cat.en : null, es: cat ? cat.es : null },
@@ -652,7 +792,8 @@ function renderFinalCard(cat, typ, code, sub) {
 
   if (complete) {
     html += '<div class="final-actions">';
-    html += '<button class="btn-primary" id="copyAllBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copiar resumen completo</button>';
+    html += '<button class="btn-primary" id="copyAllBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copiar resumen</button>';
+    html += '<button class="btn-share" id="shareBtn"' + (canShare ? '' : ' disabled') + '><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg> ' + (canShare ? 'Compartir al supervisor' : 'Cargá WO para compartir') + '</button>';
     html += '</div>';
   }
 
@@ -666,10 +807,19 @@ function renderForm() {
   const typ = (cat && ti >= 0) ? cat.types[ti] : null;
   const code = (typ && ki >= 0) ? typ.codes[ki] : null;
   const sub = (code && si >= 0) ? code.subs[si] : null;
-
   const isFavorite = (cat && typ && code && sub) ? isFav(cat.en, typ.en, code.en, sub.en) : false;
 
   let html = '';
+
+  // === WO field arriba ===
+  html += '<div class="wo-block">';
+  html += '<div class="wo-label"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> Work Order</div>';
+  html += '<div class="wo-input-wrap">';
+  html += '<div class="wo-prefix">WO-</div>';
+  html += '<input type="text" inputmode="numeric" id="woInput" class="wo-input" placeholder="Número de WO" value="' + escapeAttr(state.woNumber) + '">';
+  html += '</div>';
+  html += '</div>';
+
   html += '<div class="form-block">';
 
   // 1. Category
@@ -681,77 +831,62 @@ function renderForm() {
     const sel = i === ci ? ' selected' : '';
     html += '<option value="' + i + '"' + sel + '>' + escapeHtml(c.en) + ' · ' + escapeHtml(c.es) + '</option>';
   });
-  html += '</select></div>';
-  html += '</div>';
+  html += '</select></div></div>';
 
   // 2. Type
   html += '<div class="field">';
   html += '<label class="field-label" for="typSel"><span class="num">2</span><span class="req">*</span> Incident Type · Tipo</label>';
   html += '<div class="select-wrap"><select id="typSel" class="select' + (ti >= 0 ? ' filled' : '') + '"' + (ci < 0 ? ' disabled' : '') + '>';
-  if (ci < 0) {
-    html += '<option value="-1">— Primero seleccioná la categoría —</option>';
-  } else {
+  if (ci < 0) html += '<option value="-1">— Primero seleccioná la categoría —</option>';
+  else {
     html += '<option value="-1">— Seleccionar tipo —</option>';
     cat.types.forEach((t, i) => {
-      const sel = i === ti ? ' selected' : '';
-      html += '<option value="' + i + '"' + sel + '>' + escapeHtml(t.en) + ' · ' + escapeHtml(t.es) + '</option>';
+      html += '<option value="' + i + '"' + (i === ti ? ' selected' : '') + '>' + escapeHtml(t.en) + ' · ' + escapeHtml(t.es) + '</option>';
     });
   }
-  html += '</select></div>';
-  html += '</div>';
+  html += '</select></div></div>';
 
   // 3. Code
   html += '<div class="field">';
   html += '<label class="field-label" for="codeSel"><span class="num">3</span><span class="req">*</span> Resolution Code · Código</label>';
   html += '<div class="select-wrap"><select id="codeSel" class="select' + (ki >= 0 ? ' filled' : '') + '"' + (ti < 0 ? ' disabled' : '') + '>';
-  if (ti < 0) {
-    html += '<option value="-1">— Primero seleccioná el tipo —</option>';
-  } else {
+  if (ti < 0) html += '<option value="-1">— Primero seleccioná el tipo —</option>';
+  else {
     html += '<option value="-1">— Seleccionar código —</option>';
     typ.codes.forEach((c, i) => {
-      const sel = i === ki ? ' selected' : '';
       const subInfo = c.subs.length > 0 ? ' (' + c.subs.length + ')' : ' (sin sub)';
-      html += '<option value="' + i + '"' + sel + '>' + escapeHtml(c.en) + ' · ' + escapeHtml(c.es) + subInfo + '</option>';
+      html += '<option value="' + i + '"' + (i === ki ? ' selected' : '') + '>' + escapeHtml(c.en) + ' · ' + escapeHtml(c.es) + subInfo + '</option>';
     });
   }
-  html += '</select></div>';
-  html += '</div>';
+  html += '</select></div></div>';
 
-  // 4. Sub Code (con estrella ⭐ al lado)
+  // 4. Sub Code
   html += '<div class="field">';
   html += '<label class="field-label" for="subSel"><span class="num">4</span><span class="req">*</span> Resolution Sub Code · Subcódigo</label>';
   html += '<div class="sub-row-with-star">';
   html += '<div class="select-wrap"><select id="subSel" class="select' + (si >= 0 ? ' filled' : '') + '"' + (ki < 0 || (code && code.subs.length === 0) ? ' disabled' : '') + '>';
-  if (ki < 0) {
-    html += '<option value="-1">— Primero seleccioná el código —</option>';
-  } else if (code && code.subs.length === 0) {
-    html += '<option value="-1">— Este código no tiene subcódigos —</option>';
-  } else {
+  if (ki < 0) html += '<option value="-1">— Primero seleccioná el código —</option>';
+  else if (code && code.subs.length === 0) html += '<option value="-1">— Este código no tiene subcódigos —</option>';
+  else {
     html += '<option value="-1">— Seleccionar subcódigo —</option>';
     code.subs.forEach((s, i) => {
-      const sel = i === si ? ' selected' : '';
       const star = isFav(cat.en, typ.en, code.en, s.en) ? '⭐ ' : '';
-      html += '<option value="' + i + '"' + sel + '>' + star + escapeHtml(s.en) + ' · ' + escapeHtml(s.es) + '</option>';
+      html += '<option value="' + i + '"' + (i === si ? ' selected' : '') + '>' + star + escapeHtml(s.en) + ' · ' + escapeHtml(s.es) + '</option>';
     });
   }
   html += '</select></div>';
-
-  // Estrella - solo activa cuando hay subcódigo seleccionado
   const starDisabled = !sub;
-  html += '<button class="star-btn' + (isFavorite ? ' active' : '') + '" id="starBtn"' + (starDisabled ? ' disabled' : '') + ' title="' + (isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos') + '">';
+  html += '<button class="star-btn' + (isFavorite ? ' active' : '') + '" id="starBtn"' + (starDisabled ? ' disabled' : '') + '>';
   html += isFavorite ? '★' : '☆';
   html += '</button>';
-  html += '</div>';
-  html += '</div>';
+  html += '</div></div>';
 
-  if (ci >= 0 || ti >= 0 || ki >= 0 || si >= 0) {
+  if (ci >= 0 || ti >= 0 || ki >= 0 || si >= 0 || state.woNumber) {
     html += '<button class="reset-btn" id="resetBtn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M3 4v5h5"/></svg> Limpiar todo</button>';
   }
   html += '</div>';
 
-  if (ci >= 0) {
-    html += renderFinalCard(cat, typ, code, sub);
-  }
+  if (ci >= 0) html += renderFinalCard(cat, typ, code, sub);
 
   main.innerHTML = html;
   wireForm();
@@ -765,74 +900,85 @@ function renderForm() {
 }
 
 function wireForm() {
-  const catSel = document.getElementById('catSel');
-  if (catSel) {
-    catSel.addEventListener('change', (e) => {
-      state.catIdx = parseInt(e.target.value);
-      state.typIdx = -1; state.codeIdx = -1; state.subIdx = -1;
-      renderForm();
+  const woInput = document.getElementById('woInput');
+  if (woInput) {
+    woInput.addEventListener('input', (e) => {
+      // Solo permitir números/letras/guiones, sin espacios
+      state.woNumber = e.target.value.replace(/\s/g, '').toUpperCase();
+      e.target.value = state.woNumber;
+      saveWO();
+      // Actualizar el botón compartir si está visible
+      const shareBtn = document.getElementById('shareBtn');
+      if (shareBtn) {
+        const cat = state.catIdx >= 0 ? DATA[state.catIdx] : null;
+        const typ = cat && state.typIdx >= 0 ? cat.types[state.typIdx] : null;
+        const code = typ && state.codeIdx >= 0 ? typ.codes[state.codeIdx] : null;
+        const sub = code && state.subIdx >= 0 ? code.subs[state.subIdx] : null;
+        const canShare = cat && typ && code && sub && state.woNumber;
+        shareBtn.disabled = !canShare;
+        shareBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg> ' + (canShare ? 'Compartir al supervisor' : 'Cargá WO para compartir');
+      }
+      // Actualizar también la fila WO en el resumen
+      const finalCard = document.querySelector('.final-card');
+      if (finalCard) {
+        const cat = state.catIdx >= 0 ? DATA[state.catIdx] : null;
+        const typ = cat && state.typIdx >= 0 ? cat.types[state.typIdx] : null;
+        const code = typ && state.codeIdx >= 0 ? typ.codes[state.codeIdx] : null;
+        const sub = code && state.subIdx >= 0 ? code.subs[state.subIdx] : null;
+        finalCard.outerHTML = renderFinalCard(cat, typ, code, sub);
+        rewireFinalCard();
+      }
     });
   }
-  const typSel = document.getElementById('typSel');
-  if (typSel) {
-    typSel.addEventListener('change', (e) => {
-      state.typIdx = parseInt(e.target.value);
-      state.codeIdx = -1; state.subIdx = -1;
-      renderForm();
-    });
-  }
-  const codeSel = document.getElementById('codeSel');
-  if (codeSel) {
-    codeSel.addEventListener('change', (e) => {
-      state.codeIdx = parseInt(e.target.value);
-      state.subIdx = -1;
-      renderForm();
-    });
-  }
-  const subSel = document.getElementById('subSel');
-  if (subSel) {
-    subSel.addEventListener('change', (e) => {
-      state.subIdx = parseInt(e.target.value);
-      renderForm();
-    });
-  }
-  const resetBtn = document.getElementById('resetBtn');
-  if (resetBtn) {
-    resetBtn.addEventListener('click', () => {
-      state.catIdx = -1; state.typIdx = -1; state.codeIdx = -1; state.subIdx = -1;
-      renderForm();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  }
-  const starBtn = document.getElementById('starBtn');
-  if (starBtn) {
-    starBtn.addEventListener('click', () => {
-      const cat = DATA[state.catIdx];
-      const typ = cat.types[state.typIdx];
-      const code = typ.codes[state.codeIdx];
-      const sub = code.subs[state.subIdx];
-      const added = toggleFav(cat, typ, code, sub);
-      showToast(added ? '⭐ Agregado a favoritos' : 'Quitado de favoritos', added);
-      renderForm();
-    });
-  }
-  main.querySelectorAll('.copy-btn[data-copy]').forEach(el => {
+  document.getElementById('catSel')?.addEventListener('change', e => {
+    state.catIdx = parseInt(e.target.value); state.typIdx = -1; state.codeIdx = -1; state.subIdx = -1; renderForm();
+  });
+  document.getElementById('typSel')?.addEventListener('change', e => {
+    state.typIdx = parseInt(e.target.value); state.codeIdx = -1; state.subIdx = -1; renderForm();
+  });
+  document.getElementById('codeSel')?.addEventListener('change', e => {
+    state.codeIdx = parseInt(e.target.value); state.subIdx = -1; renderForm();
+  });
+  document.getElementById('subSel')?.addEventListener('change', e => {
+    state.subIdx = parseInt(e.target.value); renderForm();
+  });
+  document.getElementById('resetBtn')?.addEventListener('click', () => {
+    state.catIdx = -1; state.typIdx = -1; state.codeIdx = -1; state.subIdx = -1;
+    state.woNumber = ''; saveWO();
+    renderForm();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  document.getElementById('starBtn')?.addEventListener('click', () => {
+    const cat = DATA[state.catIdx], typ = cat.types[state.typIdx], code = typ.codes[state.codeIdx], sub = code.subs[state.subIdx];
+    const added = toggleFav(cat, typ, code, sub);
+    showToast(added ? '⭐ Agregado a favoritos' : 'Quitado de favoritos', added ? 'gold' : null);
+    renderForm();
+  });
+  rewireFinalCard();
+}
+
+function rewireFinalCard() {
+  document.querySelectorAll('.copy-btn[data-copy]').forEach(el => {
     el.addEventListener('click', (e) => { e.stopPropagation(); copyText(el.dataset.copy, el); });
   });
   const copyAllBtn = document.getElementById('copyAllBtn');
   if (copyAllBtn) {
     copyAllBtn.addEventListener('click', () => {
-      const cat = DATA[state.catIdx];
-      const typ = cat.types[state.typIdx];
-      const code = typ.codes[state.codeIdx];
-      const sub = code.subs[state.subIdx];
-      const text = [
-        'Incident Category: ' + cat.en,
-        'Incident Type: ' + typ.en,
-        'Resolution Code: ' + code.en,
-        'Resolution Sub Code: ' + sub.en
-      ].join('\n');
+      const cat = DATA[state.catIdx], typ = cat.types[state.typIdx], code = typ.codes[state.codeIdx], sub = code.subs[state.subIdx];
+      let text = '';
+      if (state.woNumber) text += 'WO-' + state.woNumber + '\n';
+      text += 'Incident Category: ' + cat.en + '\n';
+      text += 'Incident Type: ' + typ.en + '\n';
+      text += 'Resolution Code: ' + code.en + '\n';
+      text += 'Resolution Sub Code: ' + sub.en;
       copyText(text, copyAllBtn);
+    });
+  }
+  const shareBtn = document.getElementById('shareBtn');
+  if (shareBtn && !shareBtn.disabled) {
+    shareBtn.addEventListener('click', () => {
+      const cat = DATA[state.catIdx], typ = cat.types[state.typIdx], code = typ.codes[state.codeIdx], sub = code.subs[state.subIdx];
+      shareIncident(state.woNumber, cat, typ, code, sub, shareBtn);
     });
   }
 }
@@ -845,9 +991,7 @@ function findIndices(catEn, typEn, codeEn, subEn) {
       for (let ki = 0; ki < DATA[ci].types[ti].codes.length; ki++) {
         if (DATA[ci].types[ti].codes[ki].en !== codeEn) continue;
         for (let si = 0; si < DATA[ci].types[ti].codes[ki].subs.length; si++) {
-          if (DATA[ci].types[ti].codes[ki].subs[si].en === subEn) {
-            return { ci, ti, ki, si };
-          }
+          if (DATA[ci].types[ti].codes[ki].subs[si].en === subEn) return { ci, ti, ki, si };
         }
       }
     }
@@ -855,66 +999,121 @@ function findIndices(catEn, typEn, codeEn, subEn) {
   return null;
 }
 
-function renderFavs() {
+function formatDate(ts) {
+  const d = new Date(ts);
+  const pad = n => String(n).padStart(2, '0');
+  return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+}
+
+function renderHistory() {
   let html = '';
-  if (state.favs.length === 0) {
-    html += '<div class="empty"><div class="empty-icon">⭐</div><div class="empty-title">Todavía no tenés favoritos</div><div class="empty-sub">Tocá la estrella ☆ al lado del subcódigo para guardarlo. Aparecerá acá para acceso rápido.</div></div>';
+  if (state.history.length === 0) {
+    html += '<div class="empty"><div class="empty-icon">📋</div><div class="empty-title">Sin historial todavía</div><div class="empty-sub">Cuando completes una WO y la compartas con el supervisor, aparecerá acá. Se guardan las últimas ' + HIST_MAX + '.</div></div>';
     main.innerHTML = html;
     return;
   }
 
-  html += '<div class="section-title">' + state.favs.length + (state.favs.length === 1 ? ' favorito' : ' favoritos guardados') + '</div>';
+  html += '<div class="section-title">Últimas ' + state.history.length + ' WO completadas</div>';
 
-  for (let idx = 0; idx < state.favs.length; idx++) {
-    const f = state.favs[idx];
-    html += '<div class="fav-card">';
-    html += '<div class="fav-path">';
-    html += '<span class="pseg">' + escapeHtml(f.cat.en) + '</span>';
-    html += '<span class="psep">›</span>';
-    html += '<span class="pseg">' + escapeHtml(f.typ.en) + '</span>';
-    html += '<span class="psep">›</span>';
-    html += '<span class="pseg">' + escapeHtml(f.code.en) + '</span>';
+  for (let idx = 0; idx < state.history.length; idx++) {
+    const h = state.history[idx];
+    html += '<div class="hist-card">';
+    html += '<div class="hist-meta">';
+    html += '<div class="hist-wo">WO-' + escapeHtml(h.wo) + '</div>';
+    html += '<div class="hist-date">' + formatDate(h.ts) + '</div>';
     html += '</div>';
-    html += '<div class="fav-content">';
-    html += '<div class="fav-text">';
+    html += '<div class="hist-path">';
+    html += '<span class="pseg">' + escapeHtml(h.cat.en) + '</span>';
+    html += '<span class="psep">›</span>';
+    html += '<span class="pseg">' + escapeHtml(h.typ.en) + '</span>';
+    html += '<span class="psep">›</span>';
+    html += '<span class="pseg">' + escapeHtml(h.code.en) + '</span>';
+    html += '</div>';
+    html += '<div class="hist-content">';
+    html += '<div class="hist-text">';
     html += '<div class="sub-label">Subcódigo</div>';
-    html += '<div class="fav-en">' + escapeHtml(f.sub.en) + '</div>';
-    html += '<div class="fav-es">' + escapeHtml(f.sub.es) + '</div>';
+    html += '<div class="hist-en">' + escapeHtml(h.sub.en) + '</div>';
+    html += '<div class="hist-es">' + escapeHtml(h.sub.es) + '</div>';
     html += '</div>';
     html += '</div>';
-    html += '<div class="fav-actions">';
-    html += '<button class="btn-load" data-load="' + idx + '"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg> Cargar</button>';
-    html += '<button class="copy-btn" data-copy="' + escapeAttr(f.sub.en) + '"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>Copiar</span></button>';
-    html += '<button class="btn-remove" data-remove="' + idx + '" title="Quitar de favoritos"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>';
+    html += '<div class="hist-actions">';
+    html += '<button class="btn-share-small" data-resend="' + idx + '"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg> Reenviar</button>';
+    html += '<button class="btn-load" data-load="' + idx + '" style="flex:1;justify-content:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg> Cargar</button>';
+    html += '<button class="btn-remove" data-remove="' + idx + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>';
     html += '</div>';
     html += '</div>';
   }
 
   main.innerHTML = html;
 
+  main.querySelectorAll('[data-resend]').forEach(el => {
+    el.addEventListener('click', () => {
+      const h = state.history[parseInt(el.dataset.resend)];
+      shareIncident(h.wo, h.cat, h.typ, h.code, h.sub, el);
+    });
+  });
   main.querySelectorAll('[data-load]').forEach(el => {
     el.addEventListener('click', () => {
-      const idx = parseInt(el.dataset.load);
-      const f = state.favs[idx];
-      const indices = findIndices(f.cat.en, f.typ.en, f.code.en, f.sub.en);
-      if (!indices) {
-        showToast('Favorito no encontrado en el catálogo');
-        return;
-      }
-      state.catIdx = indices.ci;
-      state.typIdx = indices.ti;
-      state.codeIdx = indices.ki;
-      state.subIdx = indices.si;
+      const h = state.history[parseInt(el.dataset.load)];
+      const indices = findIndices(h.cat.en, h.typ.en, h.code.en, h.sub.en);
+      if (!indices) { showToast('No encontrado en el catálogo'); return; }
+      state.catIdx = indices.ci; state.typIdx = indices.ti; state.codeIdx = indices.ki; state.subIdx = indices.si;
+      state.woNumber = h.wo; saveWO();
       setMode('form');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
   main.querySelectorAll('[data-remove]').forEach(el => {
     el.addEventListener('click', () => {
-      const idx = parseInt(el.dataset.remove);
-      state.favs.splice(idx, 1);
-      saveFavs();
-      renderFavs();
+      state.history.splice(parseInt(el.dataset.remove), 1);
+      saveHistory(); renderHistory();
+      showToast('Eliminado del historial');
+    });
+  });
+}
+
+function renderFavs() {
+  let html = '';
+  if (state.favs.length === 0) {
+    html += '<div class="empty"><div class="empty-icon">⭐</div><div class="empty-title">Todavía no tenés favoritos</div><div class="empty-sub">Tocá la estrella ☆ al lado del subcódigo para guardarlo.</div></div>';
+    main.innerHTML = html; return;
+  }
+  html += '<div class="section-title">' + state.favs.length + (state.favs.length === 1 ? ' favorito' : ' favoritos guardados') + '</div>';
+  for (let idx = 0; idx < state.favs.length; idx++) {
+    const f = state.favs[idx];
+    html += '<div class="fav-card">';
+    html += '<div class="fav-path">';
+    html += '<span class="pseg">' + escapeHtml(f.cat.en) + '</span><span class="psep">›</span>';
+    html += '<span class="pseg">' + escapeHtml(f.typ.en) + '</span><span class="psep">›</span>';
+    html += '<span class="pseg">' + escapeHtml(f.code.en) + '</span>';
+    html += '</div>';
+    html += '<div class="fav-content"><div class="fav-text">';
+    html += '<div class="sub-label">Subcódigo</div>';
+    html += '<div class="fav-en">' + escapeHtml(f.sub.en) + '</div>';
+    html += '<div class="fav-es">' + escapeHtml(f.sub.es) + '</div>';
+    html += '</div></div>';
+    html += '<div class="fav-actions">';
+    html += '<button class="btn-load" data-load="' + idx + '"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg> Cargar</button>';
+    html += '<button class="copy-btn" data-copy="' + escapeAttr(f.sub.en) + '"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>Copiar</span></button>';
+    html += '<button class="btn-remove" data-remove="' + idx + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>';
+    html += '</div></div>';
+  }
+  main.innerHTML = html;
+
+  main.querySelectorAll('[data-load]').forEach(el => {
+    el.addEventListener('click', () => {
+      const f = state.favs[parseInt(el.dataset.load)];
+      const indices = findIndices(f.cat.en, f.typ.en, f.code.en, f.sub.en);
+      if (!indices) { showToast('No encontrado'); return; }
+      state.catIdx = indices.ci; state.typIdx = indices.ti; state.codeIdx = indices.ki; state.subIdx = indices.si;
+      setMode('form');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+  main.querySelectorAll('[data-remove]').forEach(el => {
+    el.addEventListener('click', () => {
+      state.favs.splice(parseInt(el.dataset.remove), 1);
+      saveFavs(); renderFavs();
       showToast('Favorito eliminado');
     });
   });
@@ -928,7 +1127,6 @@ function searchAll(q) {
   if (!nQ) return [];
   const aliasTarget = ALIASES[nQ];
   const results = [];
-
   for (let ci = 0; ci < DATA.length; ci++) {
     const cat = DATA[ci];
     const aliasMatch = aliasTarget && cat.en === aliasTarget;
@@ -957,15 +1155,13 @@ function renderSearch() {
   const q = state.query.trim();
   let html = '';
   if (!q) {
-    html += '<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">Escribí cualquier término</div><div class="empty-sub">En español o inglés. Ej: "lodo", "rig up", "calibración", "WITS", "Computer Server"</div></div>';
-    main.innerHTML = html;
-    return;
+    html += '<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">Escribí cualquier término</div><div class="empty-sub">En español o inglés. Ej: "lodo", "rig up", "calibración", "WITS"</div></div>';
+    main.innerHTML = html; return;
   }
   const results = searchAll(q);
   if (results.length === 0) {
     html += '<div class="empty"><div class="empty-icon">∅</div><div class="empty-title">Sin coincidencias</div><div class="empty-sub">No se encontró "' + escapeHtml(q) + '"</div></div>';
-    main.innerHTML = html;
-    return;
+    main.innerHTML = html; return;
   }
   html += '<div class="section-title">' + results.length + (results.length >= 200 ? '+ ' : ' ') + (results.length === 1 ? 'resultado' : 'resultados') + '</div>';
   for (const r of results) {
@@ -974,16 +1170,11 @@ function renderSearch() {
     const leafLabel = r.sub ? 'Subcódigo' : 'Código';
     html += '<div class="match-card">';
     html += '<div class="match-path">';
-    html += '<span class="pseg">' + highlight(r.cat.en, q) + ' · ' + highlight(r.cat.es, q) + '</span>';
-    html += '<span class="psep">›</span>';
+    html += '<span class="pseg">' + highlight(r.cat.en, q) + ' · ' + highlight(r.cat.es, q) + '</span><span class="psep">›</span>';
     html += '<span class="pseg">' + highlight(r.typ.en, q) + ' · ' + highlight(r.typ.es, q) + '</span>';
-    if (r.sub) {
-      html += '<span class="psep">›</span>';
-      html += '<span class="pseg">' + highlight(r.code.en, q) + ' · ' + highlight(r.code.es, q) + '</span>';
-    }
+    if (r.sub) html += '<span class="psep">›</span><span class="pseg">' + highlight(r.code.en, q) + ' · ' + highlight(r.code.es, q) + '</span>';
     html += '</div>';
-    html += '<div class="match-leaf">';
-    html += '<div class="match-leaf-text">';
+    html += '<div class="match-leaf"><div class="match-leaf-text">';
     html += '<div class="sub-label">' + leafLabel + '</div>';
     html += '<div class="match-en">' + highlight(leafEn, q) + '</div>';
     html += '<div class="match-es">' + highlight(leafEs, q) + '</div>';
@@ -992,20 +1183,15 @@ function renderSearch() {
     html += '</div>';
     html += '<div style="display:flex;gap:6px;flex-wrap:wrap">';
     html += '<button class="copy-btn goto-btn" data-go="' + r.ci + ',' + r.ti + ',' + r.ki + ',' + r.si + '"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg><span>Cargar en formulario</span></button>';
-    html += '</div>';
-    html += '</div>';
+    html += '</div></div>';
   }
   main.innerHTML = html;
-
-  main.querySelectorAll('.copy-btn[data-copy]').forEach(el => {
-    el.addEventListener('click', (e) => { e.stopPropagation(); copyText(el.dataset.copy, el); });
-  });
+  main.querySelectorAll('.copy-btn[data-copy]').forEach(el => el.addEventListener('click', e => { e.stopPropagation(); copyText(el.dataset.copy, el); }));
   main.querySelectorAll('.goto-btn').forEach(el => {
     el.addEventListener('click', () => {
       const [ci, ti, ki, si] = el.dataset.go.split(',').map(Number);
       state.catIdx = ci; state.typIdx = ti; state.codeIdx = ki; state.subIdx = si;
-      state.query = '';
-      searchInput.value = ''; searchInput.classList.remove('has-value');
+      state.query = ''; searchInput.value = ''; searchInput.classList.remove('has-value');
       setMode('form');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
@@ -1018,32 +1204,26 @@ function setMode(m) {
   if (m === 'form') renderForm();
   else if (m === 'search') renderSearch();
   else if (m === 'favs') renderFavs();
+  else if (m === 'history') renderHistory();
 }
 
-document.querySelectorAll('.tab').forEach(t => {
-  t.addEventListener('click', () => setMode(t.dataset.mode));
-});
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => setMode(t.dataset.mode)));
 
-searchInput.addEventListener('input', (e) => {
+searchInput.addEventListener('input', e => {
   state.query = e.target.value;
   searchInput.classList.toggle('has-value', !!state.query);
-  if (state.query) {
-    if (state.mode !== 'search') setMode('search');
-    else renderSearch();
-  } else {
-    if (state.mode === 'search') renderSearch();
-  }
+  if (state.query) { if (state.mode !== 'search') setMode('search'); else renderSearch(); }
+  else if (state.mode === 'search') renderSearch();
 });
 clearBtn.addEventListener('click', () => {
-  searchInput.value = ''; state.query = '';
-  searchInput.classList.remove('has-value');
+  searchInput.value = ''; state.query = ''; searchInput.classList.remove('has-value');
   searchInput.focus();
   if (state.mode === 'search') renderSearch();
 });
 
 // Init
-loadFavs();
-updateFavBadge();
+loadAll();
+updateBadges();
 renderForm();
 </script>
 <script>

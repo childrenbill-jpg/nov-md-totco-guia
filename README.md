@@ -1,30 +1,29 @@
-# NOV MD Totco · Guía de Incidentes (v2)
+# NOV MD Totco · Guía de Incidentes (v3)
 
 ## Novedades de esta versión
-- ⭐ **Sistema de favoritos**: tocá la estrella al lado del subcódigo para guardarlo
-- 📌 **Pestaña "Favoritos"**: nueva pestaña con todos los subcódigos guardados
-- 🎨 **Logo NOV oficial** en el ícono de la app
-- 🔄 **Actualización automática** en celulares ya instalados (gracias al cambio de versión del Service Worker)
+- 📋 **Campo Work Order (WO)** arriba del formulario, siempre visible
+- 📤 **Botón "Compartir al supervisor"**: abre el menú nativo del celular para elegir WhatsApp/email/contacto, con mensaje predeterminado:
+  ```
+  ✅ WO-XXXXX completada en RESCO
+  
+  📋 Detalle del incidente:
+  • Category: ...
+  • Type: ...
+  • Code: ...
+  • Sub: ...
+  ```
+- 📜 **Pestaña "Historial"**: guarda automáticamente las **últimas 5 WO** que se compartieron, con botones para reenviar, recargar al formulario o eliminar
+- 🔄 Service Worker actualizado a v3 (los celulares con la app instalada se actualizan solos)
 
-## Cómo subir esta actualización al repositorio existente
+## Cómo subir esta actualización al repositorio
+1. Ir a https://github.com/childrenbill-jpg/nov-md-totco-guia (o el nombre actual del repo)
+2. Click en **Add file → Upload files**
+3. Arrastrar los 5 archivos del ZIP
+4. **Commit changes**
+5. Esperar 1-2 minutos
+6. Probar con Ctrl+F5 en https://childrenbill-jpg.github.io/nov-md-totco-guia/
 
-1. Ir a https://github.com/childrenbill-jpg/guia-tecnicos-nov (o el nombre que le hayas puesto al repo)
-2. Click en cada archivo viejo y reemplazarlo por el nuevo:
-   - `index.html` ← reemplazar
-   - `sw.js` ← reemplazar (importante para forzar actualización)
-   - `icon-192.png` ← reemplazar (ahora tiene el logo NOV)
-   - `icon-512.png` ← reemplazar (ahora tiene el logo NOV)
-   - `manifest.json` ← reemplazar (sin cambios pero por las dudas)
-3. O más fácil: borrar todos los archivos del repositorio y subir los nuevos arrastrando.
-
-## Cómo renombrar el repositorio a "guia-tecnicos-nov"
-
-1. Ir al repositorio en GitHub.
-2. Click en **Settings** (engranaje arriba a la derecha).
-3. En la primera sección "Repository name" cambiar `nov-md-totco-guia` por `guia-tecnicos-nov`.
-4. Click en **Rename**.
-5. Tu nueva URL será: **https://childrenbill-jpg.github.io/guia-tecnicos-nov/**
-6. La URL vieja seguirá redirigiendo automáticamente al nuevo nombre por un tiempo, pero conviene actualizar el link compartido.
-
-## Para los técnicos que ya instalaron la app
-La próxima vez que abran la app con internet, automáticamente se descargará la versión nueva con favoritos y logo. Si no se actualiza al instante, basta con cerrar y abrir la app de nuevo.
+## Cómo funciona el botón Compartir
+- En el celular: abre el menú nativo del sistema. El técnico elige WhatsApp, contacto, etc.
+- En PC: abre WhatsApp Web con el mensaje listo para enviar.
+- Cuando se comparte exitosamente, la WO se guarda automáticamente en el historial.
