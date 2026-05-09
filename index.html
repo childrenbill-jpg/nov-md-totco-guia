@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#c8102e">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="NOV MD Totco">
+<meta name="mobile-web-app-capable" content="yes">
+<title>NOV MD Totco · Guía de Incidentes</title>
+<style>
+:root {
+  /* Paleta corporativa: rojo NOV + grises + pasteles */
+  --bg: #f4f5f7;
+  --bg-card: #ffffff;
+  --bg-soft: #fafbfc;
+  --bg-muted: #eef0f3;
+
+  --border: #dde1e7;
+  --border-strong: #c5cad3;
+
+  --nov-red: #c8102e;
+  --nov-red-dark: #a50d24;
+  --nov-red-soft: #fde8eb;
+  --nov-red-soft-2: #f9d4d9;
+
+  --gray-900: #1f2937;
+  --gray-700: #374151;
+  --gray-600: #4b5563;
+  --gray-500: #6b7280;
+  --gray-400: #9ca3af;
+  --gray-300: #d1d5db;
+  --gray-200: #e5e7eb;
+  --gray-100: #f3f4f6;
+
+  --text: #1f2937;
+  --text-dim: #4b5563;
+  --text-faint: #6b7280;
+
+  /* Pasteles para acentos suaves */
+  --pastel-blue: #dbeafe;
+  --pastel-blue-text: #1e40af;
+  --pastel-green: #d1fae5;
+  --pastel-green-text: #065f46;
+  --pastel-amber: #fef3c7;
+  --pastel-amber-text: #92400e;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 15px; line-height: 1.5; min-height: 100vh;
+  overscroll-behavior-y: contain;
+  -webkit-font-smoothing: antialiased;
+}
+body { padding: 0 0 80px 0; }
+.app { max-width: 720px; margin: 0 auto; padding: 16px; }
+
+header.top {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--bg);
+  background-image: linear-gradient(180deg, var(--bg) 0%, var(--bg) 80%, transparent 100%);
+  padding: 16px 16px 12px; margin: 0 -16px 16px;
+}
+.brand { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.brand .logo {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--nov-red);
+  display: grid; place-items: center;
+  font-weight: 800; font-size: 13px; color: white; letter-spacing: -0.5px;
+  box-shadow: 0 2px 8px rgba(200, 16, 46, 0.25);
+}
+.brand h1 {
+  font-size: 14px; font-weight: 700;
+  letter-spacing: -0.01em; color: var(--gray-900);
+}
+.brand .sub { font-size: 11px; color: var(--text-faint); margin-top: 2px; }
+
+.search-wrap { position: relative; }
+.search {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 44px 14px 44px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.search:focus {
+  border-color: var(--nov-red);
+  box-shadow: 0 0 0 3px var(--nov-red-soft);
+}
+.search::placeholder { color: var(--gray-400); }
+.search-icon {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  color: var(--gray-400); pointer-events: none;
+}
+.clear-btn {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  background: transparent; border: none; color: var(--gray-400);
+  width: 32px; height: 32px; border-radius: 8px;
+  cursor: pointer; display: none; align-items: center; justify-content: center;
+}
+.clear-btn:hover { background: var(--bg-muted); color: var(--gray-700); }
+.search.has-value ~ .clear-btn { display: flex; }
+
+.tabs {
+  display: flex; gap: 4px; margin: 14px 0 4px;
+  background: var(--bg-muted); border: 1px solid var(--border);
+  border-radius: 10px; padding: 4px;
+}
+.tab {
+  flex: 1; background: transparent; border: none; color: var(--text-dim);
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  padding: 10px 8px; border-radius: 7px; cursor: pointer;
+  transition: all 0.15s;
+}
+.tab.active {
+  background: var(--bg-card);
+  color: var(--nov-red);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+/* === FORM === */
+.form-block { display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field-label {
+  font-size: 12px; font-weight: 600;
+  color: var(--gray-700);
+  display: flex; align-items: center; gap: 8px;
+}
+.field-label .num {
+  display: inline-grid; place-items: center;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--nov-red-soft); color: var(--nov-red);
+  font-size: 11px; font-weight: 700;
+}
+.field-label .req { color: var(--nov-red); font-weight: 700; }
+.select-wrap { position: relative; }
+select.select {
+  width: 100%; appearance: none; -webkit-appearance: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 40px 14px 14px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+select.select:focus {
+  border-color: var(--nov-red);
+  box-shadow: 0 0 0 3px var(--nov-red-soft);
+}
+select.select.filled {
+  border-color: var(--nov-red);
+  background: var(--nov-red-soft);
+  color: var(--nov-red-dark);
+  font-weight: 600;
+}
+select.select:disabled {
+  background: var(--bg-muted);
+  color: var(--gray-400);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.select-wrap::after {
+  content: ''; position: absolute; right: 16px; top: 50%;
+  transform: translateY(-25%) rotate(45deg);
+  width: 8px; height: 8px;
+  border-right: 2px solid var(--gray-500);
+  border-bottom: 2px solid var(--gray-500);
+  pointer-events: none;
+}
+.reset-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--gray-700);
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex; align-items: center; gap: 6px;
+  align-self: flex-start;
+  transition: all 0.15s;
+}
+.reset-btn:hover { border-color: var(--nov-red); color: var(--nov-red); }
+
+/* === FINAL CARD === */
+.final-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 18px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+}
+.final-header {
+  background: var(--nov-red);
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 13px;
+  color: white;
+  letter-spacing: -0.01em;
+}
+.final-header svg { flex-shrink: 0; }
+.final-rows { padding: 0; }
+.final-row {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--gray-100);
+  transition: background 0.15s;
+}
+.final-row:last-child { border-bottom: none; }
+.final-row:hover { background: var(--bg-soft); }
+.final-row .label-col {
+  flex: 0 0 140px;
+  padding: 14px 12px 14px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-700);
+  background: var(--bg-soft);
+  border-right: 1px solid var(--gray-100);
+  display: flex; align-items: center;
+}
+.final-row .label-col .req { color: var(--nov-red); margin-right: 4px; font-weight: 700; }
+.final-row .value-col {
+  flex: 1; min-width: 0;
+  padding: 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.final-row .value-text { flex: 1; min-width: 0; }
+.final-en {
+  font-size: 14px; font-weight: 600;
+  color: var(--gray-900);
+  word-break: break-word;
+}
+.final-es {
+  font-size: 12px; color: var(--text-faint);
+  margin-top: 2px; word-break: break-word;
+  font-style: italic;
+}
+.final-pending {
+  color: var(--gray-400);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 13px;
+}
+
+.copy-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--gray-700);
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.15s;
+  display: flex; align-items: center; gap: 6px;
+  flex-shrink: 0;
+}
+.copy-btn:hover { border-color: var(--nov-red); color: var(--nov-red); background: var(--nov-red-soft); }
+.copy-btn.copied {
+  background: var(--pastel-green);
+  border-color: var(--pastel-green-text);
+  color: var(--pastel-green-text);
+}
+
+.final-actions {
+  padding: 14px 16px;
+  background: var(--nov-red-soft);
+  border-top: 1px solid var(--nov-red-soft-2);
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.btn-primary {
+  background: var(--nov-red);
+  border: 1px solid var(--nov-red);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.15s;
+  flex: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.btn-primary:hover { background: var(--nov-red-dark); }
+.btn-primary.copied {
+  background: var(--pastel-green-text);
+  border-color: var(--pastel-green-text);
+  color: white;
+}
+
+.section-title {
+  font-size: 12px; font-weight: 700;
+  color: var(--gray-600);
+  margin: 22px 0 10px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-title::after {
+  content: ''; flex: 1; height: 1px;
+  background: var(--border);
+}
+
+/* === SEARCH RESULTS === */
+.match-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--nov-red);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex; flex-direction: column; gap: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.match-path {
+  font-size: 11px; color: var(--text-faint);
+  display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
+}
+.match-path .pseg { color: var(--text-dim); }
+.match-path .psep { color: var(--nov-red); font-weight: 700; }
+.match-leaf { display: flex; align-items: flex-start; gap: 10px; }
+.match-leaf-text { flex: 1; min-width: 0; }
+.match-en { font-size: 14px; font-weight: 600; color: var(--gray-900); word-break: break-word; }
+.match-es { font-size: 12px; color: var(--text-faint); margin-top: 2px; word-break: break-word; font-style: italic; }
+.sub-label {
+  font-size: 10px; font-weight: 700;
+  color: var(--nov-red);
+  margin-bottom: 3px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+mark {
+  background: var(--pastel-amber);
+  color: var(--pastel-amber-text);
+  padding: 0 2px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.empty {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--text-faint);
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+}
+.empty-icon { font-size: 28px; margin-bottom: 10px; opacity: 0.5; }
+.empty-title { font-size: 14px; color: var(--gray-700); margin-bottom: 4px; font-weight: 600; }
+.empty-sub { font-size: 12px; color: var(--text-faint); }
+
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: var(--gray-900);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 13px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 100;
+  max-width: 90vw;
+  text-align: center;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+footer.bottom {
+  margin-top: 32px; padding-top: 16px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+@media (max-width: 480px) {
+  body { font-size: 14px; }
+  .app { padding: 12px; }
+  .copy-btn span { display: none; }
+  .copy-btn { padding: 8px; }
+  .final-en { font-size: 13px; }
+  .final-row .label-col { flex: 0 0 110px; font-size: 11px; padding: 12px 10px 12px 14px; }
+  .final-row .value-col { padding: 10px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <div class="logo">NOV</div>
+      <div>
+        <h1>MD Totco · Guía de incidentes</h1>
+        <div class="sub">EN ⇄ ES · 27 categorías · 981 subcódigos</div>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input class="search" id="search" type="search" placeholder="Buscar en español o inglés..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <button class="clear-btn" id="clearBtn" aria-label="Limpiar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-mode="form">Formulario</button>
+      <button class="tab" data-mode="search">Buscar</button>
+    </div>
+  </header>
+
+  <main id="main"></main>
+
+  <footer class="bottom">Offline · 100% en este dispositivo</footer>
+</div>
+
+<div class="toast" id="toast">Copiado</div>
+
+<script>
+const DATA = [{"en":"3rd Party Other","es":"Terceros - Otros","types":[{"en":"Computing Hardware","es":"Hardware informático","codes":[{"en":"Cabling/Connectors","es":"Cableado / Conectores","subs":[{"en":"Cable","es":"Cable"}]}]},{"en":"Custom Sensor","es":"Sensor personalizado","codes":[{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Initial Installation","es":"Instalación inicial"},{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]},{"en":"Service","es":"Servicio","subs":[{"en":"Calibration","es":"Calibración"},{"en":"Wiring  ","es":"Cableado"}]}]},{"en":"Sales - Service","es":"Ventas - Servicio","codes":[{"en":"Service","es":"Servicio","subs":[{"en":"No Follow Up Required","es":"Sin seguimiento requerido"}]},{"en":"Service - Follow Up Required","es":"Servicio - Requiere seguimiento","subs":[{"en":"Follow Up Commissioning Req'd","es":"Seguimiento - Comisionamiento requerido"},{"en":"Follow Up Parts Required","es":"Seguimiento - Repuestos requeridos"},{"en":"Follow Up Required - Customer Waiting","es":"Seguimiento requerido - Cliente esperando"},{"en":"Follow Up Training Req'd","es":"Seguimiento - Capacitación requerida"}]}]}]},{"en":"Ambient Gas","es":"Gas ambiente","types":[{"en":"CO2 Sensor","es":"Sensor de CO2","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Internal/J-Box Wiring","es":"Cableado interno / J-Box"},{"en":"Physical Damage","es":"Daño físico"}]},{"en":"Maintenance","es":"Mantenimiento","subs":[{"en":"Replace/Reposition","es":"Reemplazar / Reubicar"}]},{"en":"Miscellaneous","es":"Varios","subs":[{"en":"Other","es":"Otro"}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]},{"en":"Sensor Inputs","es":"Entradas del sensor","subs":[{"en":"Calibration","es":"Calibración"}]}]},{"en":"H2S Sensor","es":"Sensor de H2S","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Internal/J-Box Wiring","es":"Cableado interno / J-Box"},{"en":"Physical Damage","es":"Daño físico"}]},{"en":"Maintenance","es":"Mantenimiento","subs":[{"en":"Replace/Reposition","es":"Reemplazar / Reubicar"}]},{"en":"Miscellaneous","es":"Varios","subs":[{"en":"Other","es":"Otro"}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]},{"en":"Sensor Inputs","es":"Entradas del sensor","subs":[{"en":"Calibration","es":"Calibración"}]}]},{"en":"LEL Sensor ","es":"Sensor LEL","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Internal/J-Box Wiring","es":"Cableado interno / J-Box"},{"en":"Physical Damage","es":"Daño físico"}]},{"en":"Maintenance","es":"Mantenimiento","subs":[{"en":"Replace/Reposition","es":"Reemplazar / Reubicar"}]},{"en":"Miscellaneous","es":"Varios","subs":[{"en":"Other","es":"Otro"}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]},{"en":"Sensor Inputs","es":"Entradas del sensor","subs":[{"en":"Calibration","es":"Calibración"}]}]}]},{"en":"AutoDriller","es":"AutoDriller","types":[{"en":"Drive Unit/MCU","es":"Unidad de mando / MCU","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Power Cycled","es":"Reinicio de energía"},{"en":"STAC6","es":"STAC6"}]},{"en":"Software  ","es":"Software","subs":[{"en":"STAC6 Firmware","es":"Firmware STAC6"}]}]},{"en":"EDR-Sensors","es":"EDR - Sensores","codes":[{"en":"Sensor Inputs","es":"Entradas del sensor","subs":[{"en":"Primary Encoder","es":"Encoder primario"},{"en":"Pump Pressure Sensor","es":"Sensor de presión de bomba"},{"en":"RPM Sensor","es":"Sensor de RPM"},{"en":"Secondary Encoder","es":"Encoder secundario"},{"en":"Torque Sensor","es":"Sensor de torque"},{"en":"Weight Sensor","es":"Sensor de peso"}]}]},{"en":"Initial Installation","es":"Instalación inicial","codes":[{"en":"Initial Installation","es":"Instalación inicial","subs":[{"en":"Initial Installation","es":"Instalación inicial"}]}]},{"en":"Kill Switches","es":"Parada de emergencia (Kill switches)","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Kill Switch","es":"Parada de emergencia (kill switch)"}]}]},{"en":"Lift Line","es":"Línea de izaje","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Prox Target","es":"Target de proximidad"},{"en":"Quick Disconnect","es":"Desconexión rápida"},{"en":"Spring","es":"Resorte"},{"en":"Steel Cable","es":"Cable de acero"}]}]},{"en":"Lift Unit","es":"Unidad de izaje","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Power Cable","es":"Cable de alimentación"},{"en":"Prox Sensor","es":"Sensor de proximidad"},{"en":"Stepper Motor","es":"Motor paso a paso"},{"en":"Wiring Issue","es":"Problema de cableado"}]}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","codes":[{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up ","es":"Armado del equipo (rig up)"}]}]},{"en":"System Performance","es":"Desempeño del sistema","codes":[{"en":"DAQ Config","es":"Configuración del DAQ","subs":[{"en":"Channel Configuration","es":"Configuración de canal"}]},{"en":"Tuning","es":"Ajuste / Sintonización","subs":[{"en":"DiffP","es":"DiffP (presión diferencial)"},{"en":"ROP","es":"ROP (rate of penetration)"},{"en":"Torque  ","es":"Torque"},{"en":"WOB","es":"WOB (peso sobre el trépano)"}]}]},{"en":"Uninstall","es":"Desinstalación","codes":[{"en":"Uninstall","es":"Desinstalación","subs":[{"en":"Uninstall","es":"Desinstalación"}]}]},{"en":"eWildcat Training","es":"Capacitación eWildcat","codes":[{"en":"Training","es":"Capacitación","subs":[{"en":"MDT Personnel - Training","es":"Personal de MDT - Capacitación"},{"en":"Rig Crew","es":"Cuadrilla del equipo"}]}]}]},{"en":"Communications","es":"Comunicaciones","types":[{"en":"3rd Party ","es":"Terceros","codes":[{"en":"ModBus","es":"ModBus","subs":[{"en":"Cat5 Cable","es":"Cable Cat5"},{"en":"Configuration","es":"Configuración"}]},{"en":"ProfiBus","es":"ProfiBus","subs":[{"en":"Cabling  ","es":"Cableado"},{"en":"Configuration","es":"Configuración"}]},{"en":"WITS","es":"WITS","subs":[{"en":"Configuration","es":"Configuración"},{"en":"Null Modem Cable","es":"Cable null modem"}]}]},{"en":"900 MHz Radio","es":"Radio 900 MHz","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced","es":"Reemplazado"},{"en":"Resolved","es":"Resuelto"}]}]},{"en":"Access Point","es":"Punto de acceso (AP)","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Installation","es":"Instalación"},{"en":"Replace Antenna","es":"Reemplazar antena"},{"en":"Replace Cabling","es":"Reemplazar cableado"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Configuration  ","es":"Configuración"},{"en":"Upgrade","es":"Actualización"}]}]},{"en":"Antenna","es":"Antena","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced","es":"Reemplazado"},{"en":"Resolved","es":"Resuelto"}]}]},{"en":"Cabling/Connectors","es":"Cableado / Conectores","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced","es":"Reemplazado"},{"en":"Resolved","es":"Resuelto"}]}]},{"en":"Cameras","es":"Cámaras","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Initial Installation","es":"Instalación inicial"},{"en":"Replace Cabling","es":"Reemplazar cableado"},{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"},{"en":"Screen Resolution","es":"Resolución de pantalla"},{"en":"Uninstall","es":"Desinstalación"}]}]},{"en":"Cat5 Cable","es":"Cable Cat5","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Installation","es":"Instalación"},{"en":"Replaced","es":"Reemplazado"}]}]},{"en":"Communication Issues/Drop Outs","es":"Problemas de comunicación / Caídas","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced","es":"Reemplazado"},{"en":"Resolved","es":"Resuelto"}]}]},{"en":"DAQ Network Configuration","es":"Configuración de red del DAQ","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced","es":"Reemplazado"},{"en":"Resolved","es":"Resuelto"}]}]},{"en":"Ethernet DC Block","es":"Bloqueo DC Ethernet","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Installation","es":"Instalación"},{"en":"Replaced","es":"Reemplazado"}]}]},{"en":"Ethernet Port","es":"Puerto Ethernet","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced","es":"Reemplazado"},{"en":"Resolved","es":"Resuelto"}]}]},{"en":"Fiber Module","es":"Módulo de fibra","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced","es":"Reemplazado"},{"en":"Resolved","es":"Resuelto"}]}]},{"en":"LTE","es":"LTE","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Initial Installation","es":"Instalación inicial"},{"en":"Replace Antenna","es":"Reemplazar antena"},{"en":"Replace Cabling","es":"Reemplazar cableado"},{"en":"Uninstall","es":"Desinstalación"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Configuration","es":"Configuración"},{"en":"Signal Strength","es":"Intensidad de señal"},{"en":"Upgrade","es":"Actualización"}]}]},{"en":"MicroTik","es":"MikroTik","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Corrected/Installed","es":"Corregido / Instalado"},{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced","es":"Reemplazado"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Configuration","es":"Configuración"},{"en":"Signal strength","es":"Intensidad de señal"},{"en":"Upgrade","es":"Actualización"}]}]},{"en":"Move/Reroute Antennas","es":"Reubicar / re-rutear antenas","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Corrected/Installed","es":"Corregido / Instalado"},{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced","es":"Reemplazado"}]}]},{"en":"Other","es":"Otro","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Corrected/Installed","es":"Corregido / Instalado"},{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced","es":"Reemplazado"}]}]},{"en":"POE Radio","es":"Radio POE","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Power cable","es":"Cable de alimentación"},{"en":"Replace Ethernet Cabling","es":"Reemplazar cableado Ethernet"},{"en":"Replace POE","es":"Reemplazar POE"}]}]},{"en":"RF DC Block","es":"Bloqueo DC de RF","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Corrected/Installed","es":"Corregido / Instalado"},{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced","es":"Reemplazado"}]}]},{"en":"RF Jumper Cable Assemblly","es":"Conjunto de jumper de RF","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Corrected/Installed","es":"Corregido / Instalado"},{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced","es":"Reemplazado"}]}]},{"en":"RigSense Net Fiber Module","es":"Módulo de fibra RigSense Net","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Corrected/Installed","es":"Corregido / Instalado"},{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced","es":"Reemplazado"}]}]},{"en":"StarLink","es":"Starlink","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Initial Installation","es":"Instalación inicial"},{"en":"Replace cabling","es":"Reemplazar cableado"},{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"},{"en":"Uninstall","es":"Desinstalación"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Configuration","es":"Configuración"},{"en":"Upgrade","es":"Actualización"}]}]},{"en":"Training","es":"Capacitación","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Training Complete","es":"Capacitación completa"}]}]},{"en":"Wireless","es":"Inalámbrico","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Corrected/Installed","es":"Corregido / Instalado"},{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced","es":"Reemplazado"}]}]}]},{"en":"Courtesy Call","es":"Visita/llamada de cortesía","types":[{"en":"Asset Transfers","es":"Transferencia de activos","codes":[{"en":"Asset Transfers","es":"Transferencia de activos","subs":[{"en":"Asset Transfers Complete  ","es":"Transferencia de activos completa"}]}]},{"en":"Billing","es":"Facturación","codes":[{"en":"Additional Equipment Requested","es":"Equipo adicional solicitado","subs":[{"en":"Lead Generated","es":"Lead generado"}]},{"en":"Billing Completed","es":"Facturación completada","subs":[{"en":"Billing Sent to Office","es":"Facturación enviada a oficina"}]},{"en":"Requires Follow Up","es":"Requiere seguimiento","subs":[{"en":"Resolution Notated","es":"Resolución registrada"}]}]},{"en":"Manager Visit","es":"Visita de gerente","codes":[{"en":"Completed Manager Visit Checklist","es":"Checklist de visita de gerente completado","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"No Follow Up Required","es":"Sin seguimiento requerido"}]},{"en":"Post Service Follow Up","es":"Seguimiento posterior al servicio","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Issue Resolved","es":"Problema resuelto"}]}]},{"en":"OnBoarding","es":"Onboarding (Alta inicial)","codes":[{"en":"Cook Out","es":"Quemado / Cook out","subs":[{"en":"No Follow Up Required","es":"Sin seguimiento requerido"}]},{"en":"Managers Courtesy Check","es":"Chequeo de cortesía del gerente","subs":[{"en":"No Follow Up Required","es":"Sin seguimiento requerido"}]},{"en":"OnBoarding Checklist Completed","es":"Checklist de onboarding completado","subs":[{"en":"No Follow Up Required","es":"Sin seguimiento requerido"}]},{"en":"OnBoarding Checklist Not Completed","es":"Checklist de onboarding no completado","subs":[{"en":"Follow Up Required - Resolution Notated","es":"Seguimiento requerido - Resolución registrada"}]}]},{"en":"System Check - NOV Initiated","es":"Chequeo de sistema - Iniciado por NOV","codes":[{"en":"Requires Follow Up","es":"Requiere seguimiento","subs":[{"en":"Resolution Notated","es":"Resolución registrada"}]},{"en":"System Check Good","es":"Chequeo de sistema OK","subs":[{"en":"No Follow Up Required","es":"Sin seguimiento requerido"}]}]},{"en":"Training","es":"Capacitación","codes":[{"en":"Follow Up Training - Customer Requested","es":"Capacitación de seguimiento - Solicitada por el cliente","subs":[{"en":"No Follow Up Required","es":"Sin seguimiento requerido"}]},{"en":"Follow Up Training - NOV Initiated","es":"Capacitación de seguimiento - Iniciada por NOV","subs":[{"en":"No Follow Up Required","es":"Sin seguimiento requerido"}]},{"en":"Trained Crew - Follow Up Required","es":"Cuadrilla capacitada - Requiere seguimiento","subs":[{"en":"Resolution Notated","es":"Resolución registrada"}]},{"en":"Trained Crew - No Follow Up Required","es":"Cuadrilla capacitada - Sin seguimiento","subs":[{"en":"All Crews Completed","es":"Todas las cuadrillas completadas"}]},{"en":"Training Attempted - Crew Not Available","es":"Capacitación intentada - Cuadrilla no disponible","subs":[{"en":"Resolution Notated","es":"Resolución registrada"}]}]},{"en":"Verification","es":"Verificación","codes":[{"en":"Verified - Assets Confirmed","es":"Verificado - Activos confirmados","subs":[{"en":"No Follow Up Required","es":"Sin seguimiento requerido"}]},{"en":"Verified - Assets Missing","es":"Verificado - Activos faltantes","subs":[{"en":"Billed for Missing Equipment - Signed SST","es":"Facturado por equipo faltante - SST firmado"},{"en":"Missing Equipment - Needs Follow Up","es":"Equipo faltante - Requiere seguimiento"}]}]}]},{"en":"DAQ/RIOS","es":"DAQ/RIOS","types":[{"en":"Data Acquisition","es":"Adquisición de datos","codes":[{"en":"DAQ","es":"DAQ","subs":[{"en":"3rd Party Device Compatibility","es":"Compatibilidad con dispositivos de terceros"},{"en":"ADFM Board","es":"Placa ADFM"},{"en":"Bad Or Incorrect DAQ File ","es":"Archivo DAQ erróneo o incorrecto"},{"en":"Channel Configuration ","es":"Configuración de canal"},{"en":"Channel Offsets","es":"Offsets de canal"},{"en":"Configuration Tool Error","es":"Error de herramienta de configuración"},{"en":"DAQ Install","es":"Instalación de DAQ"},{"en":"DAQ Replacement","es":"Reemplazo de DAQ"},{"en":"DAQ Uninstall","es":"Desinstalación de DAQ"},{"en":"EDMS Calibration","es":"Calibración EDMS"},{"en":"Enclosure","es":"Gabinete / Encerramiento"},{"en":"Firmware Upgrade","es":"Actualización de firmware"},{"en":"Glands/Connectors","es":"Prensaestopas / Conectores"},{"en":"Global Properties Issue","es":"Problema en propiedades globales"},{"en":"Grounding Issue","es":"Problema de puesta a tierra"},{"en":"Hardware Upgrade","es":"Actualización de hardware"},{"en":"IPCM stack","es":"Stack IPCM"},{"en":"Internal Algorithm/Logic Issue","es":"Problema interno de algoritmo / lógica"},{"en":"Invalid Channel Offsets","es":"Offsets de canal inválidos"},{"en":"Maintenance Scheduled","es":"Mantenimiento programado"},{"en":"ModBus Configuration","es":"Configuración ModBus"},{"en":"Mounting","es":"Montaje"},{"en":"Other","es":"Otro"},{"en":"Output configuration","es":"Configuración de salidas"},{"en":"PVT Cable Harness","es":"Arnés de cable PVT"},{"en":"Reset/Blow Away","es":"Reset / Limpieza completa"},{"en":"SD Card Image/Corruption","es":"Imagen / corrupción de tarjeta SD"},{"en":"Safe Area Board (SAB) ","es":"Placa de área segura (SAB)"},{"en":"Sensor Calibration","es":"Calibración de sensor"},{"en":"Suspected Noise Issue","es":"Sospecha de problema de ruido"},{"en":"System/Tpot Network configuration ","es":"Configuración de red del sistema / Tpot"},{"en":"Ten Point Table","es":"Tabla de 10 puntos"},{"en":"Training","es":"Capacitación"},{"en":"Water Ingress","es":"Ingreso de agua"}]},{"en":"RIOS","es":"RIOS","subs":[{"en":"3rd Party Device Compatibility","es":"Compatibilidad con dispositivos de terceros"},{"en":"ADFM Board","es":"Placa ADFM"},{"en":"Channel Configuration ","es":"Configuración de canal"},{"en":"Enclosure","es":"Gabinete / Encerramiento"},{"en":"Firmware Upgrade","es":"Actualización de firmware"},{"en":"Front Panel Board","es":"Placa del panel frontal"},{"en":"Grounding Issue","es":"Problema de puesta a tierra"},{"en":"Hardware Upgrade","es":"Actualización de hardware"},{"en":"Maintenance Scheduled","es":"Mantenimiento programado"},{"en":"Mounting","es":"Montaje"},{"en":"Other","es":"Otro"},{"en":"Output configuration","es":"Configuración de salidas"},{"en":"RIOS Initial Install","es":"Instalación inicial de RIOS"},{"en":"RIOS Replacement","es":"Reemplazo de RIOS"},{"en":"RIOS Rig Down","es":"RIOS - Desarme de equipo"},{"en":"RIOS Rig Up","es":"RIOS - Armado de equipo"},{"en":"Reset/Blow Away","es":"Reset / Limpieza completa"},{"en":"Sensor Calibration","es":"Calibración de sensor"},{"en":"Suspected Noise Issue","es":"Sospecha de problema de ruido"},{"en":"Training","es":"Capacitación"},{"en":"Water Ingress","es":"Ingreso de agua"}]}]},{"en":"Power  ","es":"Energía","codes":[{"en":"DAQ","es":"DAQ","subs":[{"en":"2.4/5 GHz radio power cable","es":"Cable de alimentación radio 2,4 / 5 GHz"},{"en":"900 MHz Power Cable","es":"Cable de alimentación 900 MHz"},{"en":"AC Input Power","es":"Alimentación AC de entrada"},{"en":"AC Power Supply Cable Harness","es":"Arnés de cable de fuente AC"},{"en":"Backplane Power Supply Cable Harness","es":"Arnés de cable de fuente del backplane"},{"en":"EFM Backup Battery","es":"Batería de respaldo EFM"},{"en":"Fiber Module Power Cable","es":"Cable de alimentación del módulo de fibra"},{"en":"Front Panel Fuse","es":"Fusible del panel frontal"},{"en":"Inline Fuse Module","es":"Módulo de fusible en línea"},{"en":"Other","es":"Otro"},{"en":"Power Supply","es":"Fuente de alimentación"}]},{"en":"RIOS","es":"RIOS","subs":[{"en":"2.4/5 GHz radio power cable","es":"Cable de alimentación radio 2,4 / 5 GHz"},{"en":"900 MHz Power Cable","es":"Cable de alimentación 900 MHz"},{"en":"AC Input Power","es":"Alimentación AC de entrada"},{"en":"AC Power Supply Cable Harness","es":"Arnés de cable de fuente AC"},{"en":"Backplane Power Supply Cable Harness","es":"Arnés de cable de fuente del backplane"},{"en":"EFM Backup Battery","es":"Batería de respaldo EFM"},{"en":"Fiber Module Power Cable","es":"Cable de alimentación del módulo de fibra"},{"en":"Front Panel Fuse","es":"Fusible del panel frontal"},{"en":"Inline Fuse Module","es":"Módulo de fusible en línea"},{"en":"Other","es":"Otro"},{"en":"Power Supply","es":"Fuente de alimentación"}]}]}]},{"en":"DBA","es":"DBA (Base de datos)","types":[{"en":"Data Issue","es":"Problema de datos","codes":[{"en":"MetaData Not Coming Over","es":"No llegan los metadatos","subs":[{"en":"Confirmed & Resolved Context Data","es":"Datos de contexto confirmados y resueltos"},{"en":"Follow Up Required","es":"Requiere seguimiento"}]},{"en":"Other","es":"Otro","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Resolved ","es":"Resuelto"}]},{"en":"Survey Data","es":"Datos de survey","subs":[{"en":"Confirmed & Resolved Survey Data","es":"Datos de survey confirmados y resueltos"},{"en":"Follow Up Required","es":"Requiere seguimiento"}]}]},{"en":"Hardware","es":"Hardware","codes":[{"en":"DBA Offline","es":"DBA fuera de línea","subs":[{"en":"System Reboot","es":"Reinicio del sistema"}]},{"en":"Hardware Failure","es":"Falla de hardware","subs":[{"en":"Repaired","es":"Reparado"},{"en":"Replaced","es":"Reemplazado"}]}]},{"en":"Initial Installation","es":"Instalación inicial","codes":[{"en":"Initial Installation","es":"Instalación inicial","subs":[{"en":"Initial Installation","es":"Instalación inicial"}]}]},{"en":"Network Issue","es":"Problema de red","codes":[{"en":"Max Edge Not Communicating With RigSense","es":"MaxEdge no comunica con RigSense","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Reestablished Connection","es":"Conexión restablecida"},{"en":"Upgrade Network","es":"Actualizar red"}]}]},{"en":"Software","es":"Software","codes":[{"en":"Corrupt Files","es":"Archivos corruptos","subs":[{"en":"Repair or Replace Files","es":"Reparar o reemplazar archivos"}]},{"en":"Install Additional Files","es":"Instalar archivos adicionales","subs":[{"en":"Upgrade Complete","es":"Actualización completa"}]},{"en":"Upgrade","es":"Actualización","subs":[{"en":"Upgrade Complete","es":"Actualización completa"}]}]},{"en":"Training","es":"Capacitación","codes":[{"en":"Training","es":"Capacitación","subs":[{"en":"Training - Follow Needed","es":"Capacitación - Seguimiento necesario"},{"en":"Training Complete ","es":"Capacitación completa"}]}]},{"en":"Uninstall","es":"Desinstalación","codes":[{"en":"Uninstall","es":"Desinstalación","subs":[{"en":"Uninstall","es":"Desinstalación"}]}]}]},{"en":"DrillLink","es":"DrillLink","types":[{"en":"Computing Hardware","es":"Hardware informático","codes":[{"en":"Accessory","es":"Accesorio","subs":[{"en":"Wall Mount","es":"Montaje en pared"}]},{"en":"Communications","es":"Comunicaciones","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Ethernet Port","es":"Puerto Ethernet"}]},{"en":"Hardware","es":"Hardware","subs":[{"en":"Ethernet Port","es":"Puerto Ethernet"},{"en":"Hard Drive","es":"Disco rígido"},{"en":"Power Cable","es":"Cable de alimentación"},{"en":"RAM","es":"RAM"},{"en":"USB Port","es":"Puerto USB"},{"en":"Video Port","es":"Puerto de video"}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]}]},{"en":"HMI","es":"HMI","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Cat5 Cable","es":"Cable Cat5"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Initial Installation","es":"Instalación inicial"},{"en":"Power Cable","es":"Cable de alimentación"},{"en":"Replace Antenna","es":"Reemplazar antena"},{"en":"Replace Cabling","es":"Reemplazar cableado"},{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Configuration","es":"Configuración"},{"en":"Display Resolution","es":"Resolución de display"},{"en":"Image","es":"Imagen"},{"en":"Upgrade","es":"Actualización"}]}]},{"en":"Initial Installation","es":"Instalación inicial","codes":[{"en":"Initial Installation","es":"Instalación inicial","subs":[{"en":"Initial Installation","es":"Instalación inicial"}]}]},{"en":"Moxa Switch","es":"Switch Moxa","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Cat5 Cable","es":"Cable Cat5"},{"en":"Power Cable","es":"Cable de alimentación"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Configuration","es":"Configuración"},{"en":"Upgrade","es":"Actualización"}]}]},{"en":"Uninstall","es":"Desinstalación","codes":[{"en":"Uninstall","es":"Desinstalación","subs":[{"en":"Uninstall","es":"Desinstalación"}]}]}]},{"en":"EDR","es":"EDR","types":[{"en":"Encoder","es":"Encoder","codes":[{"en":"2K Encoder","es":"Encoder 2K","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Replaced","es":"Reemplazado"}]},{"en":"8K Encoder","es":"Encoder 8K","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Replaced","es":"Reemplazado"}]},{"en":"Crown Encoder","es":"Encoder de corona","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Replaced","es":"Reemplazado"}]},{"en":"Dual Encoder","es":"Encoder dual","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Replaced","es":"Reemplazado"}]}]},{"en":"Initial Installation","es":"Instalación inicial","codes":[{"en":"Initial Installation","es":"Instalación inicial","subs":[{"en":"Initial Installation","es":"Instalación inicial"}]}]},{"en":"Pump Pressure","es":"Presión de bomba","codes":[{"en":"Mudcup","es":"Mudcup","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Replaced","es":"Reemplazado"}]},{"en":"Tranducer","es":"Transductor","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Replaced","es":"Reemplazado"}]}]},{"en":"Pump SPM","es":"SPM de bomba (golpes por minuto)","codes":[{"en":"Micro Switch","es":"Microswitch","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Replaced","es":"Reemplazado"}]},{"en":"Prox Sensor","es":"Sensor de proximidad","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Replaced","es":"Reemplazado"}]}]},{"en":"RPM Sensor","es":"Sensor de RPM","codes":[{"en":"Prox Sensor","es":"Sensor de proximidad","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Replaced","es":"Reemplazado"}]}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","codes":[{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]}]},{"en":"Torque Sensor","es":"Sensor de torque","codes":[{"en":"Tranducer","es":"Transductor","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Replaced","es":"Reemplazado"}]}]},{"en":"Uninstall","es":"Desinstalación","codes":[{"en":"Uninstall","es":"Desinstalación","subs":[{"en":"Uninstall","es":"Desinstalación"}]}]},{"en":"Weight Sensor","es":"Sensor de peso","codes":[{"en":"LoadPin","es":"LoadPin (perno de carga)","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Replaced","es":"Reemplazado"}]},{"en":"TCE","es":"TCE","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Replaced","es":"Reemplazado"}]},{"en":"Tranducer","es":"Transductor","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Replaced","es":"Reemplazado"}]}]}]},{"en":"Engine Monitoring","es":"Monitoreo de motores","types":[{"en":"Initial Installation","es":"Instalación inicial","codes":[{"en":"Initial Installation","es":"Instalación inicial","subs":[{"en":"Initial Installation","es":"Instalación inicial"}]}]},{"en":"Network","es":"Red","codes":[{"en":"Configuration","es":"Configuración","subs":[{"en":"IP Address","es":"Dirección IP"}]},{"en":"Hardware","es":"Hardware","subs":[{"en":"Antenna","es":"Antena"},{"en":"Damaged Cabling","es":"Cableado dañado"},{"en":"Engine Inputs","es":"Entradas del motor"},{"en":"ModBus Outputs","es":"Salidas ModBus"},{"en":"POE Radio","es":"Radio POE"}]}]},{"en":"PLE","es":"PLE","codes":[{"en":"Configuration","es":"Configuración","subs":[{"en":"Firmware","es":"Firmware"},{"en":"Software","es":"Software"}]},{"en":"Follow Up Required","es":"Requiere seguimiento","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"}]}]},{"en":"RigSense","es":"RigSense","codes":[{"en":"Configuration","es":"Configuración","subs":[{"en":"Channel Configuration","es":"Configuración de canal"},{"en":"ModBus Configuration","es":"Configuración ModBus"}]}]},{"en":"Uninstall","es":"Desinstalación","codes":[{"en":"Uninstall","es":"Desinstalación","subs":[{"en":"Uninstall","es":"Desinstalación"}]}]}]},{"en":"Gas Detection","es":"Detección de gas","types":[{"en":"Agitator","es":"Agitador","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"New Mounting Hardware Installed","es":"Nuevo herraje de montaje instalado"}]},{"en":"Maintenance","es":"Mantenimiento","subs":[{"en":"Adjust Agitator Height","es":"Ajustar altura del agitador"},{"en":"Change Beater Bars","es":"Cambiar barras agitadoras"},{"en":"Change Out Agitator","es":"Cambiar agitador"},{"en":"Clear Out Cutting Around Agitator","es":"Limpiar recortes alrededor del agitador"},{"en":"Replace Bottom Canister","es":"Reemplazar canister inferior"}]},{"en":"Power Cable","es":"Cable de alimentación","subs":[{"en":"Change Out Connection","es":"Cambiar conexión"},{"en":"Change Out Power Cord","es":"Cambiar cable de poder"},{"en":"Plugged Into New Outlet","es":"Conectado a tomacorriente nuevo"}]}]},{"en":"GW III","es":"GW III","codes":[{"en":"C1&C3 Fault (SC3)","es":"Falla C1 y C3 (SC3)","subs":[{"en":"Barrier Replaced ","es":"Barrera reemplazada"},{"en":"Clen Sensor","es":"Limpiar sensor"},{"en":"Correct Cabling Issue","es":"Corregir problema de cableado"},{"en":"Sensor Replaced ","es":"Sensor reemplazado"}]},{"en":"Calibration","es":"Calibración","subs":[{"en":"Ajust Raw Counts","es":"Ajustar conteos crudos"},{"en":"Input 10 Point Table","es":"Tabla de 10 puntos de entrada"}]},{"en":"Flow Meter","es":"Caudalímetro","subs":[{"en":"Change Flow Meter","es":"Cambiar caudalímetro"},{"en":"Switch Out GWIII System","es":"Cambiar sistema GWIII"}]},{"en":"Gas Reading","es":"Lectura de gas","subs":[{"en":"Clear Breather Hole On Agitator","es":"Limpiar respiradero del agitador"},{"en":"Clear Debris From The Line","es":"Limpiar residuos de la línea"},{"en":"New Sample Line The Installed","es":"Nueva línea de muestreo instalada"},{"en":"Sensor Cleaned","es":"Sensor limpiado"},{"en":"Switch Out Unit","es":"Cambiar unidad"}]},{"en":"Glycol","es":"Glicol","subs":[{"en":"Install Glycol Jar","es":"Instalar frasco de glicol"},{"en":"Replace Glycol","es":"Reemplazar glicol"}]},{"en":"Initial Installation","es":"Instalación inicial","subs":[{"en":"Initial Installation","es":"Instalación inicial"}]},{"en":"Maintenance","es":"Mantenimiento","subs":[{"en":"Perform GWIII Checklist","es":"Ejecutar checklist GWIII"},{"en":"Remote Maintenance","es":"Mantenimiento remoto"},{"en":"Switch Out System","es":"Cambiar sistema"},{"en":"Trap Adjustment","es":"Ajuste de trampa"}]},{"en":"Methane Fault (SC1)","es":"Falla de metano (SC1)","subs":[{"en":"Barrier Replaced","es":"Barrera reemplazada"},{"en":"Clean Sensor","es":"Limpiar sensor"},{"en":"Correct Cabling Issue","es":"Corregir problema de cableado"},{"en":"Sensor Replaced","es":"Sensor reemplazado"}]},{"en":"Propane Fault (SC2)","es":"Falla de propano (SC2)","subs":[{"en":"Barrier Replaced","es":"Barrera reemplazada"},{"en":"Clean Sensor","es":"Limpiar sensor"},{"en":"Correct Cabling Issue","es":"Corregir problema de cableado"},{"en":"Sensor Replaced","es":"Sensor reemplazado"}]},{"en":"Pump","es":"Bomba","subs":[{"en":"On Site Restart","es":"Reinicio en sitio"},{"en":"Pump Failure","es":"Falla de bomba"},{"en":"Remote Restart","es":"Reinicio remoto"},{"en":"Replace Equipment","es":"Reemplazar equipo"}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]},{"en":"RigSense ","es":"RigSense","subs":[{"en":"Reconfigure Channel","es":"Reconfigurar canal"},{"en":"Remote Maintenance","es":"Mantenimiento remoto"},{"en":"Restart Rigsense","es":"Reiniciar RigSense"}]},{"en":"Sensor","es":"Sensor","subs":[{"en":"Change Sensor","es":"Cambiar sensor"},{"en":"Clean Sensor","es":"Limpiar sensor"}]},{"en":"Uninstall","es":"Desinstalación","subs":[{"en":"Uninstall","es":"Desinstalación"}]},{"en":"Vac Fault (SC6)","es":"Falla de vacío (SC6)","subs":[{"en":"Barrier Replaced","es":"Barrera reemplazada"},{"en":"Clean Sensor","es":"Limpiar sensor"},{"en":"Correct Cabling Issue","es":"Corregir problema de cableado"},{"en":"Sensor Replaced","es":"Sensor reemplazado"}]},{"en":"Vacuum","es":"Vacío","subs":[{"en":"Blow Out Line","es":"Línea de venteo (blow-out)"},{"en":"Install Blowback","es":"Instalar blowback"},{"en":"Repositioned Sample Line","es":"Línea de muestreo reubicada"},{"en":"Switch Out System","es":"Cambiar sistema"}]}]},{"en":"Gas Analyzer","es":"Analizador de gas","codes":[{"en":"AC Power","es":"Alimentación AC","subs":[{"en":"Change Out Appleton Connection","es":"Cambiar conexión Appleton"},{"en":"Change Out Power Cord","es":"Cambiar cable de poder"}]},{"en":"Chiller","es":"Chiller (enfriador)","subs":[{"en":"Remove Chiller from Line","es":"Retirar chiller de la línea"},{"en":"Switch Out Chiller","es":"Cambiar chiller"}]},{"en":"Filter","es":"Filtro","subs":[{"en":"Replace Filter Assembly","es":"Reemplazar conjunto de filtro"}]},{"en":"Flow Alarm","es":"Alarma de flujo","subs":[{"en":"Acknowledge Alarm","es":"Reconocer alarma"},{"en":"Clear Line Obstruction","es":"Despejar obstrucción de línea"},{"en":"Restart Pump","es":"Reiniciar bomba"}]},{"en":"Initial Installation","es":"Instalación inicial","subs":[{"en":"Initial Installation","es":"Instalación inicial"}]},{"en":"Laptop","es":"Laptop","subs":[{"en":"Install New Null Modem Cable","es":"Instalar nuevo cable null modem"},{"en":"New Dongle Installed","es":"Nuevo dongle instalado"},{"en":"Plug In Dongle","es":"Conectar dongle"},{"en":"Remote Issue Resolution","es":"Resolución remota del problema"},{"en":"Switch Out Entire System","es":"Cambiar sistema completo"}]},{"en":"Maintenance","es":"Mantenimiento","subs":[{"en":"Perform GWA Checklist ","es":"Ejecutar checklist GWA"},{"en":"Replace Dryer Assembly ","es":"Reemplazar conjunto secador"},{"en":"Replace Membrane Drier","es":"Reemplazar secador de membrana"},{"en":"Switch Out Agitator ","es":"Cambiar agitador"},{"en":"System Replacement ","es":"Reemplazo de sistema"},{"en":"Test Gas As Analyzer","es":"Probar gas como analizador"},{"en":"Test Gas As Trap ","es":"Probar gas como trampa"}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]},{"en":"Uninstall","es":"Desinstalación","subs":[{"en":"Uninstall","es":"Desinstalación"}]},{"en":"Vacuum","es":"Vacío","subs":[{"en":"Clear Line ","es":"Limpiar línea"},{"en":"Replace Filter ","es":"Reemplazar filtro"},{"en":"Repositioned Sample Line ","es":"Línea de muestreo reubicada"}]}]}]},{"en":"HCA","es":"HCA","types":[{"en":"Data Issue","es":"Problema de datos","codes":[{"en":"3rd Party Data Not Coming Over","es":"No llegan datos de terceros","subs":[{"en":"Confirmed & Resolved Data","es":"Datos confirmados y resueltos"},{"en":"Follow Up Required","es":"Requiere seguimiento"}]},{"en":"Other","es":"Otro","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Resolved ","es":"Resuelto"}]}]},{"en":"Hardware","es":"Hardware","codes":[{"en":"HCA Offline","es":"HCA fuera de línea","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"System Reboot","es":"Reinicio del sistema"}]},{"en":"Hardware Failure","es":"Falla de hardware","subs":[{"en":"Repaired","es":"Reparado"},{"en":"Replaced","es":"Reemplazado"}]}]},{"en":"Initial Installation","es":"Instalación inicial","codes":[{"en":"Initial Installation","es":"Instalación inicial","subs":[{"en":"Initial Installation","es":"Instalación inicial"}]}]},{"en":"Network Issue","es":"Problema de red","codes":[{"en":"Max Edge Not Communicating With RigSense","es":"MaxEdge no comunica con RigSense","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Reestablished Connection","es":"Conexión restablecida"},{"en":"Upgrade Network","es":"Actualizar red"}]}]},{"en":"Software","es":"Software","codes":[{"en":"Corrupt Files","es":"Archivos corruptos","subs":[{"en":"Repair or Replace Files","es":"Reparar o reemplazar archivos"}]},{"en":"Install Additional Files","es":"Instalar archivos adicionales","subs":[{"en":"Upgrade Complete","es":"Actualización completa"}]},{"en":"Upgrade","es":"Actualización","subs":[{"en":"Upgrade Complete","es":"Actualización completa"}]}]},{"en":"Training","es":"Capacitación","codes":[{"en":"Training","es":"Capacitación","subs":[{"en":"Training - Follow Needed","es":"Capacitación - Seguimiento necesario"},{"en":"Training Complete ","es":"Capacitación completa"}]}]},{"en":"Uninstall","es":"Desinstalación","codes":[{"en":"Uninstall","es":"Desinstalación","subs":[{"en":"Uninstall","es":"Desinstalación"}]}]}]},{"en":"Hazardous Display","es":"Display para área clasificada (Hazardous)","types":[{"en":"Communications","es":"Comunicaciones","codes":[{"en":"Communication Failure","es":"Falla de comunicación","subs":[{"en":"Configuration  ","es":"Configuración"},{"en":"Replace Antenna","es":"Reemplazar antena"},{"en":"Replace Cabling","es":"Reemplazar cableado"},{"en":"Upgrade","es":"Actualización"}]}]},{"en":"Hardware Issue","es":"Problema de hardware","codes":[{"en":"Calibration","es":"Calibración","subs":[{"en":"Replaced HMI","es":"HMI reemplazada"},{"en":"Resolved","es":"Resuelto"}]},{"en":"Contrast/Brightness","es":"Contraste / Brillo","subs":[{"en":"Replaced HMI","es":"HMI reemplazada"},{"en":"Resolved","es":"Resuelto"}]},{"en":"Cracked/Broken","es":"Quebrado / Roto","subs":[{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"}]},{"en":"Move/Remount","es":"Mover / Remontar","subs":[{"en":"Replaced HMI","es":"HMI reemplazada"},{"en":"Resolved","es":"Resuelto"}]},{"en":"Not Responsive","es":"No responde","subs":[{"en":"Replaced HMI","es":"HMI reemplazada"},{"en":"Resolved","es":"Resuelto"}]},{"en":"Power","es":"Energía","subs":[{"en":"Replaced Power Cable","es":"Cable de alimentación reemplazado"},{"en":"Rerouted Power Cable","es":"Cable de alimentación re-ruteado"}]},{"en":"SunShield/Visor","es":"Protector solar / Visor","subs":[{"en":"Replaced HMI","es":"HMI reemplazada"},{"en":"Resolved","es":"Resuelto"}]},{"en":"Water/Moisture","es":"Agua / Humedad","subs":[{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"}]}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","codes":[{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]}]}]},{"en":"Hydraulic Gauge Systems","es":"Sistemas de manómetros hidráulicos","types":[{"en":"Sales - Service","es":"Ventas - Servicio","codes":[{"en":"Service - Follow Up Required","es":"Servicio - Requiere seguimiento","subs":[{"en":"Commissioning","es":"Comisionamiento"},{"en":"Parts Required","es":"Repuestos requeridos"},{"en":"Training","es":"Capacitación"},{"en":"Waiting On Customer","es":"Esperando al cliente"}]},{"en":"Service Complete ","es":"Servicio completo","subs":[{"en":"No Follow Up Required","es":"Sin seguimiento requerido"}]}]}]},{"en":"Kaizen","es":"Kaizen","types":[{"en":"Beckhoff Controller","es":"Controlador Beckhoff","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Cat5 Cable","es":"Cable Cat5"},{"en":"Replace Controller","es":"Reemplazar controlador"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Reimage Card","es":"Re-imagen de tarjeta"},{"en":"Replace Card","es":"Reemplazar tarjeta"},{"en":"Varball Configuration","es":"Configuración Varball"}]}]},{"en":"Computing Hardware","es":"Hardware informático","codes":[{"en":"Accessory","es":"Accesorio","subs":[{"en":"Wall Mount","es":"Montaje en pared"}]},{"en":"Communications ","es":"Comunicaciones","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Ethernet Port","es":"Puerto Ethernet"}]},{"en":"Hardware","es":"Hardware","subs":[{"en":"Ethernet Port","es":"Puerto Ethernet"},{"en":"Hard Drive","es":"Disco rígido"},{"en":"Power Cable","es":"Cable de alimentación"},{"en":"RAM","es":"RAM"},{"en":"USB Port","es":"Puerto USB"},{"en":"Video Port","es":"Puerto de video"}]}]},{"en":"EDGE","es":"EDGE","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Power Cycled","es":"Reinicio de energía"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Configuration","es":"Configuración"}]}]},{"en":"HMI","es":"HMI","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Cat5 Cable","es":"Cable Cat5"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Initial Installation","es":"Instalación inicial"},{"en":"Power Cable","es":"Cable de alimentación"},{"en":"Replace Antenna","es":"Reemplazar antena"},{"en":"Replace Cabling","es":"Reemplazar cableado"},{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Configuration","es":"Configuración"},{"en":"Display Resolution","es":"Resolución de display"},{"en":"Image","es":"Imagen"},{"en":"Upgrade","es":"Actualización"}]}]},{"en":"Moxa Switch","es":"Switch Moxa","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Cat5 Cable ","es":"Cable Cat5"},{"en":"Power Cable","es":"Cable de alimentación"},{"en":"Replace Moxa Switch","es":"Reemplazar switch Moxa"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Configuration","es":"Configuración"},{"en":"Upgrade","es":"Actualización"}]}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","codes":[{"en":"Commission","es":"Comisionamiento","subs":[{"en":"Commission","es":"Comisionamiento"}]},{"en":"DeCommission","es":"Descomisionamiento","subs":[{"en":"Decommission","es":"Descomisionamiento"}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]}]},{"en":"RigSense","es":"RigSense","codes":[{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Kaizen Channel Setup","es":"Configuración de canal Kaizen"},{"en":"MSI Communication","es":"Comunicación MSI"}]}]}]},{"en":"Max Completions","es":"Max Completions","types":[{"en":"Data Issue","es":"Problema de datos","codes":[{"en":"3rd Party Data Not Coming Over","es":"No llegan datos de terceros","subs":[{"en":"Confirmed & Resolved Data","es":"Datos confirmados y resueltos"},{"en":"Follow Up Required","es":"Requiere seguimiento"}]},{"en":"Max Completions Offline","es":"Max Completions fuera de línea","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"System Reboot","es":"Reinicio del sistema"}]},{"en":"Other","es":"Otro","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Resolved ","es":"Resuelto"}]}]},{"en":"Hardware","es":"Hardware","codes":[{"en":"Hardware Failure","es":"Falla de hardware","subs":[{"en":"Repaired","es":"Reparado"},{"en":"Replaced","es":"Reemplazado"}]}]},{"en":"Initial Installation","es":"Instalación inicial","codes":[{"en":"Initial Installation","es":"Instalación inicial","subs":[{"en":"Initial Installation","es":"Instalación inicial"}]}]},{"en":"Network Issue","es":"Problema de red","codes":[{"en":"Max Edge Not Communicating With Max","es":"MaxEdge no comunica con Max","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Reestablished Connection","es":"Conexión restablecida"},{"en":"Upgrade Network","es":"Actualizar red"}]}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","codes":[{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]}]},{"en":"Sensor","es":"Sensor","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Initial Installation","es":"Instalación inicial"},{"en":"Mounting Bracket","es":"Soporte de montaje"},{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]},{"en":"Software","es":"Software","subs":[{"en":"Calibration","es":"Calibración"},{"en":"Channel Configuration","es":"Configuración de canal"}]}]},{"en":"Software","es":"Software","codes":[{"en":"Corrupt Files","es":"Archivos corruptos","subs":[{"en":"Repair or Replace Files","es":"Reparar o reemplazar archivos"}]},{"en":"Install Additional Files","es":"Instalar archivos adicionales","subs":[{"en":"Upgrade Complete","es":"Actualización completa"}]},{"en":"Upgrade","es":"Actualización","subs":[{"en":"Upgrade Complete","es":"Actualización completa"}]}]},{"en":"Training","es":"Capacitación","codes":[{"en":"Training","es":"Capacitación","subs":[{"en":"Training - Follow Needed","es":"Capacitación - Seguimiento necesario"},{"en":"Training Complete ","es":"Capacitación completa"}]}]},{"en":"Uninstall","es":"Desinstalación","codes":[{"en":"Uninstall","es":"Desinstalación","subs":[{"en":"Uninstall","es":"Desinstalación"}]}]}]},{"en":"MaxEdge","es":"MaxEdge","types":[{"en":"Computing Hardware","es":"Hardware informático","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Cabling","es":"Cableado"},{"en":"Industrial Computer","es":"Computadora industrial"},{"en":"Other","es":"Otro"}]},{"en":"Power","es":"Energía","subs":[{"en":"AC Filter","es":"Filtro AC"},{"en":"Circuit Breakers","es":"Disyuntores"},{"en":"Input Power","es":"Alimentación de entrada"},{"en":"Power Cable","es":"Cable de alimentación"},{"en":"UPS","es":"UPS"}]}]},{"en":"Initial Installation","es":"Instalación inicial","codes":[{"en":"Initial Installation","es":"Instalación inicial","subs":[{"en":"Initial Installation","es":"Instalación inicial"}]}]},{"en":"Network","es":"Red","codes":[{"en":"Configuration","es":"Configuración","subs":[{"en":"3rd Party","es":"Terceros"},{"en":"Base Image","es":"Imagen base"},{"en":"Edge Manager","es":"Edge Manager"},{"en":"Firewall","es":"Firewall"},{"en":"IP Address","es":"Dirección IP"},{"en":"Provisioning Tool","es":"Herramienta de aprovisionamiento"}]}]},{"en":"Software","es":"Software","codes":[{"en":"Upgrade","es":"Actualización","subs":[{"en":"Upgrade Firmware","es":"Actualizar firmware"},{"en":"Upgrade Template","es":"Actualizar plantilla"}]}]},{"en":"Software - Export/Import","es":"Software - Exportar / Importar","codes":[{"en":"Export Services","es":"Servicios de exportación","subs":[{"en":"Create New Export","es":"Crear nueva exportación"},{"en":"Edit Export Service","es":"Editar servicio de exportación"},{"en":"Remove Export Service","es":"Eliminar servicio de exportación"}]},{"en":"Import Services","es":"Servicios de importación","subs":[{"en":"Create New Import","es":"Crear nueva importación"},{"en":"Edit Import Service","es":"Editar servicio de importación"},{"en":"Remove Import Service","es":"Eliminar servicio de importación"}]}]},{"en":"Uninstall","es":"Desinstalación","codes":[{"en":"Uninstall","es":"Desinstalación","subs":[{"en":"Uninstall","es":"Desinstalación"}]}]}]},{"en":"NOVOS","es":"NOVOS","types":[{"en":"Initial Installation","es":"Instalación inicial","codes":[{"en":"Initial Installation","es":"Instalación inicial","subs":[{"en":"Initial Installation","es":"Instalación inicial"}]}]},{"en":"Network","es":"Red","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Initial Installation","es":"Instalación inicial"},{"en":"Replace Antenna","es":"Reemplazar antena"},{"en":"Replace Cabling","es":"Reemplazar cableado"},{"en":"Replace Firewall","es":"Reemplazar firewall"},{"en":"Replace Internet Service Provider","es":"Reemplazar ISP"},{"en":"Replace Modem","es":"Reemplazar módem"},{"en":"Uninstall","es":"Desinstalación"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Configuration","es":"Configuración"},{"en":"Signal Strength","es":"Intensidad de señal"},{"en":"Upgrade","es":"Actualización"}]}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","codes":[{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]}]},{"en":"StarLink","es":"Starlink","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Initial Installation","es":"Instalación inicial"},{"en":"Replace Firewall","es":"Reemplazar firewall"},{"en":"Replace Internet Service Provider","es":"Reemplazar ISP"},{"en":"Replace cabling","es":"Reemplazar cableado"},{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"},{"en":"Uninstall","es":"Desinstalación"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Configuration","es":"Configuración"},{"en":"Upgrade","es":"Actualización"}]}]},{"en":"Uninstall","es":"Desinstalación","codes":[{"en":"Uninstall","es":"Desinstalación","subs":[{"en":"Uninstall","es":"Desinstalación"}]}]}]},{"en":"ORIONNET/MRS (RWM)","es":"ORIONNET/MRS (RWM)","types":[{"en":"Computing Hardware","es":"Hardware informático","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Cabling","es":"Cableado"},{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Industrial Computer","es":"Computadora industrial"},{"en":"Other","es":"Otro"}]},{"en":"Power","es":"Energía","subs":[{"en":"AC Filter","es":"Filtro AC"},{"en":"Circuit Breakers","es":"Disyuntores"},{"en":"Input Power","es":"Alimentación de entrada"},{"en":"Power Cable","es":"Cable de alimentación"},{"en":"UPS","es":"UPS"}]}]},{"en":"Initial Installation","es":"Instalación inicial","codes":[{"en":"Initial Installation","es":"Instalación inicial","subs":[{"en":"Initial Installation","es":"Instalación inicial"}]}]},{"en":"Network","es":"Red","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Initial Installation","es":"Instalación inicial"},{"en":"Replace Antenna","es":"Reemplazar antena"},{"en":"Replace Cabling","es":"Reemplazar cableado"},{"en":"Replace Firewall","es":"Reemplazar firewall"},{"en":"Replace Internet Service Provider","es":"Reemplazar ISP"},{"en":"Replace Modem","es":"Reemplazar módem"},{"en":"Uninstall","es":"Desinstalación"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Configuration","es":"Configuración"},{"en":"Signal Strength","es":"Intensidad de señal"},{"en":"Upgrade","es":"Actualización"}]}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","codes":[{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]}]},{"en":"Sensor","es":"Sensor","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Cabling/Connectors","es":"Cableado / Conectores"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Initial Installation","es":"Instalación inicial"},{"en":"Mounting Bracket","es":"Soporte de montaje"},{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]},{"en":"Software","es":"Software","subs":[{"en":"Calibration","es":"Calibración"},{"en":"Channel Configuration","es":"Configuración de canal"}]}]},{"en":"Software","es":"Software","codes":[{"en":"Upgrade","es":"Actualización","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Upgrade Firmware","es":"Actualizar firmware"}]}]},{"en":"Training","es":"Capacitación","codes":[{"en":"Training","es":"Capacitación","subs":[{"en":"Training Complete","es":"Capacitación completa"},{"en":"Training Follow Up Needed","es":"Seguimiento de capacitación necesario"}]}]},{"en":"Uninstall","es":"Desinstalación","codes":[{"en":"Uninstall","es":"Desinstalación","subs":[{"en":"Uninstall","es":"Desinstalación"}]}]}]},{"en":"QCA","es":"QCA","types":[{"en":"Auto Driller","es":"AutoDriller","codes":[{"en":"General","es":"General","subs":[{"en":"Complete QCA Inspection","es":"Completar inspección QCA"},{"en":"Follow Up - Corrections","es":"Seguimiento - Correcciones"},{"en":"Follow Up - Waiting on Customer","es":"Seguimiento - Esperando al cliente"},{"en":"MDT Personnel - Training","es":"Personal de MDT - Capacitación"}]}]},{"en":"DAQ","es":"DAQ","codes":[{"en":"General","es":"General","subs":[{"en":"Complete QCA Inspection","es":"Completar inspección QCA"},{"en":"Follow Up - Corrections","es":"Seguimiento - Correcciones"},{"en":"Follow Up - Waiting on Customer","es":"Seguimiento - Esperando al cliente"},{"en":"MDT Personnel - Training","es":"Personal de MDT - Capacitación"}]}]},{"en":"EDR","es":"EDR","codes":[{"en":"General","es":"General","subs":[{"en":"Complete QCA Inspection","es":"Completar inspección QCA"},{"en":"Follow Up - Corrections","es":"Seguimiento - Correcciones"},{"en":"Follow Up - Waiting on Customer","es":"Seguimiento - Esperando al cliente"},{"en":"MDT Personnel - Training","es":"Personal de MDT - Capacitación"}]}]},{"en":"Engine Monitoring","es":"Monitoreo de motores","codes":[{"en":"General","es":"General","subs":[{"en":"Complete QCA Inspection","es":"Completar inspección QCA"},{"en":"Follow Up - Corrections","es":"Seguimiento - Correcciones"},{"en":"Follow Up - Waiting on Customer","es":"Seguimiento - Esperando al cliente"},{"en":"MDT Personnel - Training","es":"Personal de MDT - Capacitación"}]}]},{"en":"MSI","es":"MSI","codes":[{"en":"General","es":"General","subs":[{"en":"Complete QCA Inspection","es":"Completar inspección QCA"},{"en":"Follow Up - Corrections","es":"Seguimiento - Correcciones"},{"en":"Follow Up - Waiting on Customer","es":"Seguimiento - Esperando al cliente"},{"en":"MDT Personnel - Training","es":"Personal de MDT - Capacitación"}]}]},{"en":"MaxEdge","es":"MaxEdge","codes":[{"en":"General","es":"General","subs":[{"en":"Complete QCA Inspection","es":"Completar inspección QCA"},{"en":"Follow Up - Corrections","es":"Seguimiento - Correcciones"},{"en":"Follow Up - Waiting on Customer","es":"Seguimiento - Esperando al cliente"},{"en":"MDT Personnel - Training","es":"Personal de MDT - Capacitación"}]}]},{"en":"PVT","es":"PVT","codes":[{"en":"General","es":"General","subs":[{"en":"Complete QCA Inspection","es":"Completar inspección QCA"},{"en":"Follow Up - Corrections","es":"Seguimiento - Correcciones"},{"en":"Follow Up - Waiting on Customer","es":"Seguimiento - Esperando al cliente"},{"en":"MDT Personnel - Training","es":"Personal de MDT - Capacitación"}]}]},{"en":"RIO","es":"RIO","codes":[{"en":"General","es":"General","subs":[{"en":"Complete QCA Inspection","es":"Completar inspección QCA"},{"en":"Follow Up - Corrections","es":"Seguimiento - Correcciones"},{"en":"Follow Up - Waiting on Customer","es":"Seguimiento - Esperando al cliente"},{"en":"MDT Personnel - Training","es":"Personal de MDT - Capacitación"}]}]},{"en":"Rig Cabins","es":"Casetas del equipo","codes":[{"en":"General","es":"General","subs":[{"en":"Complete QCA Inspection","es":"Completar inspección QCA"},{"en":"Follow Up - Corrections","es":"Seguimiento - Correcciones"},{"en":"Follow Up - Waiting on Customer","es":"Seguimiento - Esperando al cliente"},{"en":"MDT Personnel - Training","es":"Personal de MDT - Capacitación"}]}]},{"en":"Wireless","es":"Inalámbrico","codes":[{"en":"General","es":"General","subs":[{"en":"Complete QCA Inspection","es":"Completar inspección QCA"},{"en":"Follow Up - Corrections","es":"Seguimiento - Correcciones"},{"en":"Follow Up - Waiting on Customer","es":"Seguimiento - Esperando al cliente"},{"en":"MDT Personnel - Training","es":"Personal de MDT - Capacitación"}]}]}]},{"en":"RigSense","es":"RigSense","types":[{"en":"Report Management System","es":"Sistema de gestión de reportes","codes":[{"en":"Computer/Software","es":"Computadora / Software","subs":[{"en":"Bit Record","es":"Registro de trépano (bit record)"},{"en":"Crew Needs Training","es":"La cuadrilla requiere capacitación"},{"en":"Employee Report","es":"Reporte de empleado"},{"en":"Morning Report","es":"Reporte matutino"},{"en":"Needs Latest RMS Update","es":"Requiere última actualización de RMS"},{"en":"OBM Report","es":"Reporte OBM (lodo base aceite)"},{"en":"Payroll","es":"Liquidación de sueldos"},{"en":"RMS - Other","es":"RMS - Otro"},{"en":"Report Not Visible","es":"Reporte no visible"},{"en":"Rig Directions","es":"Indicaciones / Acceso al equipo"},{"en":"Sign Out","es":"Cerrar sesión"},{"en":"Summary Reports","es":"Reportes resumen"},{"en":"Test New Release","es":"Probar nueva versión"},{"en":"Toursheet","es":"Toursheet (parte de turno)"},{"en":"Well Setup Screen","es":"Pantalla de configuración de pozo"}]}]},{"en":"RigSense","es":"RigSense","codes":[{"en":"Computer/Software","es":"Computadora / Software","subs":[{"en":"Crash Recovery","es":"Recuperación por caída"},{"en":"Custom Channels","es":"Canales personalizados"},{"en":"Database","es":"Base de datos"},{"en":"Exporting Drilling Data","es":"Exportación de datos de perforación"},{"en":"General","es":"General"},{"en":"MSE","es":"MSE (Mechanical Specific Energy)"},{"en":"Network Configuration","es":"Configuración de red"},{"en":"Pipe Tally","es":"Pipe tally (medición de tubería)"},{"en":"Printing Drill Logs","es":"Impresión de drill logs"},{"en":"RMS Upgrade","es":"Actualización de RMS"},{"en":"Reimage","es":"Re-imagen"},{"en":"Rig Activity Engine","es":"Motor de actividad del equipo"},{"en":"RigSense Configuration","es":"Configuración de RigSense"},{"en":"Test New Release","es":"Probar nueva versión"},{"en":"Trip Sheet","es":"Trip sheet (planilla de viaje)"},{"en":"Unit Conversions","es":"Conversión de unidades"},{"en":"WITS","es":"WITS"}]}]},{"en":"Sales - Service","es":"Ventas - Servicio","codes":[{"en":"Service - Follow Up Required","es":"Servicio - Requiere seguimiento","subs":[{"en":"Commissioning","es":"Comisionamiento"},{"en":"Parts Required","es":"Repuestos requeridos"},{"en":"Training","es":"Capacitación"},{"en":"Waiting on Customer","es":"Esperando al cliente"}]},{"en":"Service Complete ","es":"Servicio completo","subs":[{"en":"No follow Up Required","es":"Sin seguimiento requerido"}]}]},{"en":"Software - Other","es":"Software - Otro","codes":[{"en":"Computer/Software","es":"Computadora / Software","subs":[{"en":"Customer Assistance","es":"Asistencia al cliente"},{"en":"Kick Detection Monitoring","es":"Monitoreo de detección de kick"},{"en":"Kick Simulator","es":"Simulador de kick"},{"en":"MSI/ACI/VDAQ","es":"MSI / ACI / VDAQ"},{"en":"Outlook Express","es":"Outlook Express"},{"en":"User Installed Software","es":"Software instalado por usuario"},{"en":"Virus/Spyware","es":"Virus / Spyware"},{"en":"WITS Capture","es":"Captura WITS"},{"en":"Web Browser","es":"Navegador web"},{"en":"Windows","es":"Windows"}]}]}]},{"en":"Rotork","es":"Rotork","types":[{"en":"Choke Position Indicator","es":"Indicador de posición de estrangulador","codes":[{"en":"Electrical","es":"Eléctrico","subs":[{"en":"Electrical/Wiring","es":"Eléctrico / Cableado"}]},{"en":"General","es":"General","subs":[{"en":"Other","es":"Otro"}]},{"en":"Tuning","es":"Ajuste / Sintonización","subs":[{"en":"Calibration","es":"Calibración"}]}]},{"en":"Choke Remote Control Unit","es":"Unidad de control remoto del estrangulador","codes":[{"en":"Electrical","es":"Eléctrico","subs":[{"en":"Electrical/Wiring","es":"Eléctrico / Cableado"}]},{"en":"General","es":"General","subs":[{"en":"Other","es":"Otro"}]},{"en":"Hardware","es":"Hardware","subs":[{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Replaced","es":"Reemplazado"}]}]},{"en":"Rotork Actuator","es":"Actuador Rotork","codes":[{"en":"Electrical","es":"Eléctrico","subs":[{"en":"AC Power","es":"Alimentación AC"},{"en":"Electrical/Wiring","es":"Eléctrico / Cableado"}]},{"en":"General","es":"General","subs":[{"en":"Other","es":"Otro"}]},{"en":"Hardware","es":"Hardware","subs":[{"en":"Choke Valve Issue","es":"Problema en válvula estranguladora"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Hardware Upgrade","es":"Actualización de hardware"},{"en":"Replaced","es":"Reemplazado"},{"en":"Unable Close/Open Valve","es":"No se puede cerrar / abrir la válvula"},{"en":"Valve Compatibility","es":"Compatibilidad de válvula"}]},{"en":"Maintenance","es":"Mantenimiento","subs":[{"en":"Scheduled Maintenance","es":"Mantenimiento programado"}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Initial Installation","es":"Instalación inicial"},{"en":"Uninstall","es":"Desinstalación"}]},{"en":"Tuning","es":"Ajuste / Sintonización","subs":[{"en":"Calibration","es":"Calibración"},{"en":"Configuration","es":"Configuración"},{"en":"Performance/Response","es":"Desempeño / Respuesta"}]}]},{"en":"Rotork Mounting/Adapters","es":"Montaje / Adaptadores Rotork","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Adapter Issue","es":"Problema con el adaptador"},{"en":"Mounting Issue","es":"Problema de montaje"}]}]}]},{"en":"SoftSpeed II","es":"SoftSpeed II","types":[{"en":"Courtesy Call","es":"Visita/llamada de cortesía","codes":[{"en":"SoftSpeed Billing","es":"Facturación SoftSpeed","subs":[{"en":"Stop/Start Billing","es":"Detener / Iniciar facturación"}]},{"en":"SoftSpeed Training","es":"Capacitación SoftSpeed","subs":[{"en":"Customer","es":"Cliente"},{"en":"MDT Personnel - Training","es":"Personal de MDT - Capacitación"}]}]},{"en":"HMI","es":"HMI","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Cat5 Cable ","es":"Cable Cat5"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Initial Installation","es":"Instalación inicial"},{"en":"Power Cable","es":"Cable de alimentación"},{"en":"Replace Antenna","es":"Reemplazar antena"},{"en":"Replace Cabling","es":"Reemplazar cableado"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Configuration","es":"Configuración"},{"en":"Display Resolution","es":"Resolución de display"},{"en":"Image","es":"Imagen"},{"en":"Upgrade","es":"Actualización"}]}]},{"en":"Integrator Box","es":"Caja integradora","codes":[{"en":"Communications ","es":"Comunicaciones","subs":[{"en":"Cat5 Cable ","es":"Cable Cat5"},{"en":"ProfiBus","es":"ProfiBus"}]},{"en":"Hardware","es":"Hardware","subs":[{"en":"C-Fast Card","es":"Tarjeta C-Fast"},{"en":"Initial Installation","es":"Instalación inicial"},{"en":"Mounting Bracket","es":"Soporte de montaje"}]},{"en":"Power","es":"Energía","subs":[{"en":"Power Cable","es":"Cable de alimentación"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"C-Fast Card Configuration","es":"Configuración de tarjeta C-Fast"},{"en":"Image C-Fast Card","es":"Imagen de tarjeta C-Fast"},{"en":"Varball Configuration","es":"Configuración Varball"}]}]},{"en":"MSI Beckhoff Controller","es":"Controlador Beckhoff MSI","codes":[{"en":"Communications ","es":"Comunicaciones","subs":[{"en":"Cat5 Cable ","es":"Cable Cat5"}]},{"en":"Hardware","es":"Hardware","subs":[{"en":"Flash Card","es":"Tarjeta Flash"},{"en":"Installation","es":"Instalación"}]},{"en":"Power","es":"Energía","subs":[{"en":"Power Supply","es":"Fuente de alimentación"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Flash Card Configuration","es":"Configuración de tarjeta Flash"},{"en":"Image Flash Card","es":"Imagen de tarjeta Flash"}]}]},{"en":"Network","es":"Red","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Installation","es":"Instalación"},{"en":"Network Error","es":"Error de red"},{"en":"Replace Antenna","es":"Reemplazar antena"},{"en":"Replace Cabling","es":"Reemplazar cableado"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Configuration  ","es":"Configuración"},{"en":"Upgrade","es":"Actualización"}]}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","codes":[{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Initial Installation","es":"Instalación inicial"},{"en":"Uninstall","es":"Desinstalación"}]}]},{"en":"RigSense","es":"RigSense","codes":[{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"MSI Communication","es":"Comunicación MSI"},{"en":"SoftSpeed Channel Setup","es":"Configuración de canales SoftSpeed"}]}]},{"en":"Router","es":"Router","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Cat5 Cable ","es":"Cable Cat5"},{"en":"Power Cable","es":"Cable de alimentación"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Configuration","es":"Configuración"},{"en":"Upgrade","es":"Actualización"}]}]}]},{"en":"Survey Equipment","es":"Equipo de survey (registro direccional)","types":[{"en":"Deliver/Pick Up/Lost Equipment","es":"Entrega / Retiro / Equipo perdido","codes":[{"en":"Damaged Equipment","es":"Equipo dañado","subs":[{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"}]},{"en":"Deliver Equipment","es":"Entregar equipo","subs":[{"en":"Delivery SST Needs Follow Up","es":"SST de entrega requiere seguimiento"},{"en":"Delivery SST Signed","es":"SST de entrega firmado"}]},{"en":"Lost Equipment","es":"Equipo perdido","subs":[{"en":"SST Not Signed - Follow Up Required","es":"SST sin firmar - Requiere seguimiento"},{"en":"SST Signed","es":"SST firmado"}]},{"en":"Pick Up Equipment","es":"Retirar equipo","subs":[{"en":"Billing Not Signed - Needs Follow Up","es":"Facturación sin firmar - Requiere seguimiento"},{"en":"Billing Signed","es":"Facturación firmada"}]}]},{"en":"E-Totco Instrument","es":"Instrumento E-Totco","codes":[{"en":"General","es":"General","subs":[{"en":"Bad Inclination","es":"Inclinación incorrecta"},{"en":"Tool Not Working","es":"Herramienta no funciona"}]},{"en":"Hardware","es":"Hardware","subs":[{"en":"Battery Failure or Low","es":"Falla de batería o batería baja"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Running Gear Adapters","es":"Adaptadores de running gear"}]},{"en":"Maintenance","es":"Mantenimiento","subs":[{"en":"Replaced","es":"Reemplazado"}]},{"en":"Other","es":"Otro","subs":[{"en":"Other","es":"Otro"}]}]},{"en":"E-Totco Reader","es":"Lector E-Totco","codes":[{"en":"Communications","es":"Comunicaciones","subs":[{"en":"RigSense Interface","es":"Interfaz de RigSense"},{"en":"Tool/Com Errors","es":"Errores de herramienta / comunicación"}]},{"en":"Electrical ","es":"Eléctrico","subs":[{"en":"Power  ","es":"Energía"}]},{"en":"Hardware","es":"Hardware","subs":[{"en":"Display","es":"Display"},{"en":"Enclosure","es":"Gabinete / Encerramiento"},{"en":"Paper","es":"Papel"},{"en":"Printer","es":"Impresora"}]},{"en":"Other","es":"Otro","subs":[{"en":"Other","es":"Otro"}]}]},{"en":"Mechanical Clock","es":"Reloj mecánico","codes":[{"en":"General","es":"General","subs":[{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Lost","es":"Perdido"}]},{"en":"Hardware","es":"Hardware","subs":[{"en":"Bad Survey","es":"Survey defectuoso"},{"en":"Clock/Timer Issue","es":"Problema de reloj / temporizador"},{"en":"No/Partial Survey","es":"Sin survey / survey parcial"}]},{"en":"Maintenance","es":"Mantenimiento","subs":[{"en":"Replaced","es":"Reemplazado"}]}]},{"en":"Running Gear","es":"Tren de poleas (Running Gear)","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Baffle Plate/Spider","es":"Placa deflectora / Spider"},{"en":"Centralizer/Stablizer","es":"Centralizador / Estabilizador"},{"en":"Overshot","es":"Overshot (pesca)"},{"en":"Shock Absorber","es":"Amortiguador"},{"en":"Sinker Bar","es":"Barra de hundido (sinker bar)"},{"en":"Spear Point","es":"Punta de pesca (spear point)"},{"en":"Stabilizer Fingers","es":"Dedos del estabilizador"},{"en":"Survey Barrel/Go-Devil","es":"Survey barrel / Go-Devil"},{"en":"Survey Charts","es":"Gráficos de survey"},{"en":"Wire Line Attachments","es":"Accesorios de wireline"}]}]}]},{"en":"Twister","es":"Twister","types":[{"en":"Courtesy Call","es":"Visita/llamada de cortesía","codes":[{"en":"Billing","es":"Facturación","subs":[{"en":"Stop/Start billing","es":"Detener / Iniciar facturación"}]},{"en":"Hardware","es":"Hardware","subs":[{"en":"Rig Survey","es":"Survey del equipo"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Varball Configuration","es":"Configuración Varball"}]},{"en":"Twister Training","es":"Capacitación Twister","subs":[{"en":"Customer","es":"Cliente"},{"en":"MDT Personnel - Training","es":"Personal de MDT - Capacitación"}]}]},{"en":"HMI","es":"HMI","codes":[{"en":"Hardware","es":"Hardware","subs":[{"en":"Cat5 Cable ","es":"Cable Cat5"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Initial Installation","es":"Instalación inicial"},{"en":"Power Cable","es":"Cable de alimentación"},{"en":"Replace Antenna","es":"Reemplazar antena"},{"en":"Replace Cabling","es":"Reemplazar cableado"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Configuration","es":"Configuración"},{"en":"Display Resolution","es":"Resolución de display"},{"en":"Image","es":"Imagen"},{"en":"Upgrade","es":"Actualización"}]}]},{"en":"Initial Installation","es":"Instalación inicial","codes":[{"en":"Initial Installation","es":"Instalación inicial","subs":[{"en":"Initial Installation","es":"Instalación inicial"}]}]},{"en":"MSI Beckhoff Controller","es":"Controlador Beckhoff MSI","codes":[{"en":"Communications ","es":"Comunicaciones","subs":[{"en":"Cat5 Cable ","es":"Cable Cat5"}]},{"en":"Hardware","es":"Hardware","subs":[{"en":"Flash Card","es":"Tarjeta Flash"},{"en":"Initial Installation","es":"Instalación inicial"}]},{"en":"Power","es":"Energía","subs":[{"en":"Power Supply","es":"Fuente de alimentación"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Flash Card Configuration","es":"Configuración de tarjeta Flash"},{"en":"Image Flash Card","es":"Imagen de tarjeta Flash"}]}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","codes":[{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]}]},{"en":"Uninstall","es":"Desinstalación","codes":[{"en":"Uninstall","es":"Desinstalación","subs":[{"en":"Uninstall","es":"Desinstalación"}]}]}]},{"en":"WellData","es":"WellData","types":[{"en":"Create Group/Rigs","es":"Crear grupo / equipos","codes":[{"en":"Account Service","es":"Servicio de cuenta","subs":[{"en":"Create 3rd Party Group","es":"Crear grupo de terceros"},{"en":"Create Contractor","es":"Crear contratista"},{"en":"Create Operator","es":"Crear operador"},{"en":"Create Rig","es":"Crear equipo"}]}]},{"en":"Customer Accounts","es":"Cuentas de cliente","codes":[{"en":"Account Service","es":"Servicio de cuenta","subs":[{"en":"Create Accounts","es":"Crear cuentas"},{"en":"Delete Accounts","es":"Eliminar cuentas"},{"en":"Granting Users Access","es":"Otorgar acceso a usuarios"},{"en":"Request Credentials","es":"Solicitar credenciales"},{"en":"Unlock Accounts","es":"Desbloquear cuentas"},{"en":"User Export Settings","es":"Configuración de exportación de usuario"},{"en":"Users With Access To Operate Data","es":"Usuarios con acceso a operar datos"}]}]},{"en":"RT/Mobile RT","es":"RT / RT móvil","codes":[{"en":"Account Service","es":"Servicio de cuenta","subs":[{"en":"Mobile RT Install","es":"Instalación de RT móvil"},{"en":"Mobile RT Troubleshooting","es":"Diagnóstico de RT móvil"},{"en":"RT Install","es":"Instalación de RT"},{"en":"RT Troubleshooting","es":"Diagnóstico de RT"}]}]},{"en":"Realtime Outage","es":"Caída de tiempo real (Realtime)","codes":[{"en":"General","es":"General","subs":[{"en":"Update MAC Address","es":"Actualizar dirección MAC"}]},{"en":"Hardware","es":"Hardware","subs":[{"en":"Internet Service Provider Down","es":"Proveedor de internet (ISP) caído"},{"en":"Server Down","es":"Servidor caído"}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Rig Moving","es":"Mudanza de equipo"}]}]},{"en":"Stop/Start Wells","es":"Detener / Iniciar pozos","codes":[{"en":"Account Service","es":"Servicio de cuenta","subs":[{"en":"New Wells","es":"Pozos nuevos"},{"en":"Restart Wells","es":"Reiniciar pozos"},{"en":"Stop Wells","es":"Detener pozos"}]}]},{"en":"Uploads","es":"Cargas / Subidas","codes":[{"en":"Communications ","es":"Comunicaciones","subs":[{"en":"Data Hung Up On Ap Server","es":"Datos colgados en el servidor AP"},{"en":"Rigs Not Uploading","es":"Equipos no están subiendo datos"},{"en":"Troubleshoot Uploads","es":"Diagnóstico de cargas / subidas"}]}]},{"en":"WITS","es":"WITS","codes":[{"en":"3rd Party inputs","es":"Entradas de terceros","subs":[{"en":"Gamma Data","es":"Datos de gamma"},{"en":"Import Surveys","es":"Importar surveys"},{"en":"Import Well Plan","es":"Importar plan de pozo"},{"en":"Setup Approved Surveys","es":"Configurar surveys aprobados"},{"en":"Survey Data","es":"Datos de survey"},{"en":"WITS Setup","es":"Configuración WITS"}]}]},{"en":"WITSML","es":"WITSML","codes":[{"en":"Account Service","es":"Servicio de cuenta","subs":[{"en":"Create Accounts","es":"Crear cuentas"}]},{"en":"Communications ","es":"Comunicaciones","subs":[{"en":"Cannot Connect To WITSML Store","es":"No se puede conectar al WITSML Store"},{"en":"Data Outage","es":"Caída de datos"},{"en":"Missing Data","es":"Datos faltantes"}]}]},{"en":"Welldata Data","es":"Datos de WellData","codes":[{"en":"Account Service","es":"Servicio de cuenta","subs":[{"en":"Crash Recover Data","es":"Recuperación de datos por caída"},{"en":"Data Extract","es":"Extracción de datos"},{"en":"Delete Reports","es":"Eliminar reportes"},{"en":"Merging Wells","es":"Fusión de pozos"}]}]}]},{"en":"Workstations/Servers","es":"Estaciones de trabajo / Servidores","types":[{"en":"Computer Monitor","es":"Monitor de computadora","codes":[{"en":"Extended Display","es":"Display extendido","subs":[{"en":"Cabling/Splitter","es":"Cableado / Splitter"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Relocated","es":"Reubicado"},{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"},{"en":"Screen Resolution","es":"Resolución de pantalla"},{"en":"Wall Mount","es":"Montaje en pared"}]},{"en":"Main Display","es":"Display principal","subs":[{"en":"Cabling","es":"Cableado"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Power","es":"Energía"},{"en":"Screen Resolution","es":"Resolución de pantalla"},{"en":"Wall Mount","es":"Montaje en pared"}]},{"en":"Oversize","es":"Sobredimensionado","subs":[{"en":"Cabling/Splitter","es":"Cableado / Splitter"},{"en":"Damaged Equipment - Chargable","es":"Equipo dañado - Facturable"},{"en":"Damaged Equipment - Not Chargable","es":"Equipo dañado - No facturable"},{"en":"Relocated","es":"Reubicado"},{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"},{"en":"Screen Resolution","es":"Resolución de pantalla"},{"en":"Wall Mount","es":"Montaje en pared"}]}]},{"en":"Computing Hardware","es":"Hardware informático","codes":[{"en":"CMOS Battery","es":"Batería CMOS","subs":[{"en":"Replaced","es":"Reemplazado"}]},{"en":"Cabling/Connectors","es":"Cableado / Conectores","subs":[{"en":"Antenna Cable","es":"Cable de antena"},{"en":"Cat5 Cable","es":"Cable Cat5"}]},{"en":"Communications","es":"Comunicaciones","subs":[{"en":"ATA Switch","es":"Switch ATA"},{"en":"Wireless","es":"Inalámbrico"}]},{"en":"Ethernet Port","es":"Puerto Ethernet","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced Workstation/Server","es":"Estación de trabajo / Servidor reemplazado"}]},{"en":"Hard Drive","es":"Disco rígido","subs":[{"en":"ReImage","es":"Re-imagen"},{"en":"Replaced Hard Drive","es":"Disco rígido reemplazado"},{"en":"Replaced Workstation/Server","es":"Estación de trabajo / Servidor reemplazado"}]},{"en":"Keyboard/Mouse","es":"Teclado / Mouse","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced Batteries","es":"Baterías reemplazadas"},{"en":"Replaced/Installed","es":"Reemplazado / Instalado"}]},{"en":"Lost/Missing/Damaged Equipment","es":"Equipo perdido / faltante / dañado","subs":[{"en":"Damaged/Lost/Missing Equipment - Chargable","es":"Equipo dañado / perdido / faltante - Facturable"},{"en":"Damaged/Lost/Missing Equipment - Not Chargable","es":"Equipo dañado / perdido / faltante - No facturable"}]},{"en":"Null Modem Cable","es":"Cable null modem","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Install Drivers","es":"Instalar drivers"},{"en":"Replaced/Installed","es":"Reemplazado / Instalado"},{"en":"Serial to USB Adapter","es":"Adaptador serie a USB"}]},{"en":"Power Cord","es":"Cable de poder","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced","es":"Reemplazado"}]},{"en":"RAM","es":"RAM","subs":[{"en":"Added RAM","es":"RAM añadida"},{"en":"Replaced RAM","es":"RAM reemplazada"}]},{"en":"Rig Up/Rig Down","es":"Armado / Desarme del equipo","subs":[{"en":"Rig Down","es":"Desarme del equipo"},{"en":"Rig Up","es":"Armado del equipo"}]},{"en":"Software/Firmware","es":"Software / Firmware","subs":[{"en":"Upgrade","es":"Actualización"}]},{"en":"USB Port","es":"Puerto USB","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced Workstation/Server","es":"Estación de trabajo / Servidor reemplazado"}]}]},{"en":"Printer/Ink","es":"Impresora / Tinta","codes":[{"en":"Hardware Issue","es":"Problema de hardware","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Install/Replace Printer","es":"Instalar / Reemplazar impresora"},{"en":"Replaced Ink","es":"Tinta reemplazada"}]}]},{"en":"Signature Pad","es":"Pad de firma","codes":[{"en":"Hardware Issue","es":"Problema de hardware","subs":[{"en":"Replaced/Installed","es":"Reemplazado / Instalado"}]},{"en":"Hardware issue","es":"Problema de hardware","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"}]}]},{"en":"Speakers","es":"Parlantes","codes":[{"en":"Hardware Issue","es":"Problema de hardware","subs":[{"en":"Follow Up Required","es":"Requiere seguimiento"},{"en":"Replaced/Installed","es":"Reemplazado / Instalado"}]}]}]}];
+
+const ALIASES = {
+  'computer - server': 'Workstations/Servers',
+  'computer-server': 'Workstations/Servers',
+  'computer server': 'Workstations/Servers'
+};
+
+const state = {
+  mode: 'form',
+  catIdx: -1,
+  typIdx: -1,
+  codeIdx: -1,
+  subIdx: -1,
+  query: ''
+};
+
+const $ = (sel) => document.querySelector(sel);
+const main = $('#main');
+const searchInput = $('#search');
+const clearBtn = $('#clearBtn');
+const toast = $('#toast');
+
+function normalize(s) {
+  return (s || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+function escapeHtml(s) {
+  return (s || '').toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function escapeAttr(s) {
+  return escapeHtml(s).replace(/\n/g, ' ');
+}
+function highlight(text, q) {
+  if (!q) return escapeHtml(text);
+  const nText = normalize(text); const nQ = normalize(q);
+  const idx = nText.indexOf(nQ);
+  if (idx === -1) return escapeHtml(text);
+  let mapping = [];
+  for (let i = 0; i < text.length; i++) {
+    const norm = normalize(text[i]);
+    for (let j = 0; j < norm.length; j++) mapping.push(i);
+  }
+  const startOrig = mapping[idx];
+  const endOrig = mapping[Math.min(idx + nQ.length - 1, mapping.length - 1)] + 1;
+  return escapeHtml(text.slice(0, startOrig)) + '<mark>' + escapeHtml(text.slice(startOrig, endOrig)) + '</mark>' + escapeHtml(text.slice(endOrig));
+}
+
+function copyText(text, btn) {
+  const t = (text || '').toString();
+  const onSuccess = () => {
+    if (btn) {
+      btn.classList.add('copied');
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>OK</span>';
+      setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = orig; }, 1400);
+    }
+    toast.textContent = 'Copiado: ' + (t.length > 50 ? t.slice(0, 50) + '…' : t);
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 1700);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(t).then(onSuccess).catch(() => fallbackCopy(t, onSuccess));
+  } else {
+    fallbackCopy(t, onSuccess);
+  }
+}
+function fallbackCopy(text, cb) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e){}
+  document.body.removeChild(ta);
+}
+
+function renderFinalCard(cat, typ, code, sub) {
+  const complete = cat && typ && code && sub;
+  let html = '<div class="final-card">';
+  html += '<div class="final-header">';
+  html += '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+  html += complete ? 'Resumen — Listo para cargar al sistema' : 'Resumen — Selección incompleta';
+  html += '</div>';
+  html += '<div class="final-rows">';
+
+  const rows = [
+    { label: 'Incident Category', en: cat ? cat.en : null, es: cat ? cat.es : null },
+    { label: 'Incident Type', en: typ ? typ.en : null, es: typ ? typ.es : null },
+    { label: 'Resolution Code', en: code ? code.en : null, es: code ? code.es : null },
+    { label: 'Resolution Sub Code', en: sub ? sub.en : null, es: sub ? sub.es : null }
+  ];
+
+  rows.forEach(r => {
+    html += '<div class="final-row">';
+    html += '<div class="label-col"><span class="req">*</span> ' + escapeHtml(r.label) + '</div>';
+    html += '<div class="value-col">';
+    if (r.en) {
+      html += '<div class="value-text"><div class="final-en">' + escapeHtml(r.en) + '</div><div class="final-es">' + escapeHtml(r.es) + '</div></div>';
+      html += '<button class="copy-btn" data-copy="' + escapeAttr(r.en) + '"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>Copiar</span></button>';
+    } else {
+      html += '<div class="value-text"><div class="final-pending">— pendiente —</div></div>';
+    }
+    html += '</div></div>';
+  });
+
+  html += '</div>';
+
+  if (complete) {
+    html += '<div class="final-actions">';
+    html += '<button class="btn-primary" id="copyAllBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copiar resumen completo</button>';
+    html += '</div>';
+  }
+
+  html += '</div>';
+  return html;
+}
+
+function renderForm() {
+  const ci = state.catIdx, ti = state.typIdx, ki = state.codeIdx, si = state.subIdx;
+  const cat = ci >= 0 ? DATA[ci] : null;
+  const typ = (cat && ti >= 0) ? cat.types[ti] : null;
+  const code = (typ && ki >= 0) ? typ.codes[ki] : null;
+  const sub = (code && si >= 0) ? code.subs[si] : null;
+
+  let html = '';
+  html += '<div class="form-block">';
+
+  // 1. Category
+  html += '<div class="field">';
+  html += '<label class="field-label" for="catSel"><span class="num">1</span><span class="req">*</span> Incident Category · Categoría</label>';
+  html += '<div class="select-wrap"><select id="catSel" class="select' + (ci >= 0 ? ' filled' : '') + '">';
+  html += '<option value="-1">— Seleccionar categoría —</option>';
+  DATA.forEach((c, i) => {
+    const sel = i === ci ? ' selected' : '';
+    html += '<option value="' + i + '"' + sel + '>' + escapeHtml(c.en) + ' · ' + escapeHtml(c.es) + '</option>';
+  });
+  html += '</select></div>';
+  html += '</div>';
+
+  // 2. Type
+  html += '<div class="field">';
+  html += '<label class="field-label" for="typSel"><span class="num">2</span><span class="req">*</span> Incident Type · Tipo</label>';
+  html += '<div class="select-wrap"><select id="typSel" class="select' + (ti >= 0 ? ' filled' : '') + '"' + (ci < 0 ? ' disabled' : '') + '>';
+  if (ci < 0) {
+    html += '<option value="-1">— Primero seleccioná la categoría —</option>';
+  } else {
+    html += '<option value="-1">— Seleccionar tipo —</option>';
+    cat.types.forEach((t, i) => {
+      const sel = i === ti ? ' selected' : '';
+      html += '<option value="' + i + '"' + sel + '>' + escapeHtml(t.en) + ' · ' + escapeHtml(t.es) + '</option>';
+    });
+  }
+  html += '</select></div>';
+  html += '</div>';
+
+  // 3. Code
+  html += '<div class="field">';
+  html += '<label class="field-label" for="codeSel"><span class="num">3</span><span class="req">*</span> Resolution Code · Código</label>';
+  html += '<div class="select-wrap"><select id="codeSel" class="select' + (ki >= 0 ? ' filled' : '') + '"' + (ti < 0 ? ' disabled' : '') + '>';
+  if (ti < 0) {
+    html += '<option value="-1">— Primero seleccioná el tipo —</option>';
+  } else {
+    html += '<option value="-1">— Seleccionar código —</option>';
+    typ.codes.forEach((c, i) => {
+      const sel = i === ki ? ' selected' : '';
+      const subInfo = c.subs.length > 0 ? ' (' + c.subs.length + ')' : ' (sin sub)';
+      html += '<option value="' + i + '"' + sel + '>' + escapeHtml(c.en) + ' · ' + escapeHtml(c.es) + subInfo + '</option>';
+    });
+  }
+  html += '</select></div>';
+  html += '</div>';
+
+  // 4. Sub Code
+  html += '<div class="field">';
+  html += '<label class="field-label" for="subSel"><span class="num">4</span><span class="req">*</span> Resolution Sub Code · Subcódigo</label>';
+  html += '<div class="select-wrap"><select id="subSel" class="select' + (si >= 0 ? ' filled' : '') + '"' + (ki < 0 || (code && code.subs.length === 0) ? ' disabled' : '') + '>';
+  if (ki < 0) {
+    html += '<option value="-1">— Primero seleccioná el código —</option>';
+  } else if (code && code.subs.length === 0) {
+    html += '<option value="-1">— Este código no tiene subcódigos —</option>';
+  } else {
+    html += '<option value="-1">— Seleccionar subcódigo —</option>';
+    code.subs.forEach((s, i) => {
+      const sel = i === si ? ' selected' : '';
+      html += '<option value="' + i + '"' + sel + '>' + escapeHtml(s.en) + ' · ' + escapeHtml(s.es) + '</option>';
+    });
+  }
+  html += '</select></div>';
+  html += '</div>';
+
+  if (ci >= 0 || ti >= 0 || ki >= 0 || si >= 0) {
+    html += '<button class="reset-btn" id="resetBtn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M3 4v5h5"/></svg> Limpiar todo</button>';
+  }
+  html += '</div>';
+
+  if (ci >= 0) {
+    html += renderFinalCard(cat, typ, code, sub);
+  }
+
+  main.innerHTML = html;
+  wireForm();
+
+  if (sub) {
+    setTimeout(() => {
+      const card = document.querySelector('.final-card');
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }, 80);
+  }
+}
+
+function wireForm() {
+  const catSel = document.getElementById('catSel');
+  if (catSel) {
+    catSel.addEventListener('change', (e) => {
+      state.catIdx = parseInt(e.target.value);
+      state.typIdx = -1; state.codeIdx = -1; state.subIdx = -1;
+      renderForm();
+    });
+  }
+  const typSel = document.getElementById('typSel');
+  if (typSel) {
+    typSel.addEventListener('change', (e) => {
+      state.typIdx = parseInt(e.target.value);
+      state.codeIdx = -1; state.subIdx = -1;
+      renderForm();
+    });
+  }
+  const codeSel = document.getElementById('codeSel');
+  if (codeSel) {
+    codeSel.addEventListener('change', (e) => {
+      state.codeIdx = parseInt(e.target.value);
+      state.subIdx = -1;
+      renderForm();
+    });
+  }
+  const subSel = document.getElementById('subSel');
+  if (subSel) {
+    subSel.addEventListener('change', (e) => {
+      state.subIdx = parseInt(e.target.value);
+      renderForm();
+    });
+  }
+  const resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      state.catIdx = -1; state.typIdx = -1; state.codeIdx = -1; state.subIdx = -1;
+      renderForm();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+  main.querySelectorAll('.copy-btn[data-copy]').forEach(el => {
+    el.addEventListener('click', (e) => { e.stopPropagation(); copyText(el.dataset.copy, el); });
+  });
+  const copyAllBtn = document.getElementById('copyAllBtn');
+  if (copyAllBtn) {
+    copyAllBtn.addEventListener('click', () => {
+      const cat = DATA[state.catIdx];
+      const typ = cat.types[state.typIdx];
+      const code = typ.codes[state.codeIdx];
+      const sub = code.subs[state.subIdx];
+      const text = [
+        'Incident Category: ' + cat.en,
+        'Incident Type: ' + typ.en,
+        'Resolution Code: ' + code.en,
+        'Resolution Sub Code: ' + sub.en
+      ].join('\n');
+      copyText(text, copyAllBtn);
+    });
+  }
+}
+
+function searchAll(q) {
+  const nQ = normalize(q);
+  if (!nQ) return [];
+  const aliasTarget = ALIASES[nQ];
+  const results = [];
+
+  for (let ci = 0; ci < DATA.length; ci++) {
+    const cat = DATA[ci];
+    const aliasMatch = aliasTarget && cat.en === aliasTarget;
+    for (let ti = 0; ti < cat.types.length; ti++) {
+      const typ = cat.types[ti];
+      for (let ki = 0; ki < typ.codes.length; ki++) {
+        const code = typ.codes[ki];
+        if (code.subs.length === 0) {
+          const hay = [cat.en, cat.es, typ.en, typ.es, code.en, code.es].map(normalize).join(' | ');
+          if (aliasMatch || hay.includes(nQ)) results.push({ cat, typ, code, sub: null, ci, ti, ki, si: -1 });
+        } else {
+          for (let bi = 0; bi < code.subs.length; bi++) {
+            const sub = code.subs[bi];
+            const hay = [cat.en, cat.es, typ.en, typ.es, code.en, code.es, sub.en, sub.es].map(normalize).join(' | ');
+            if (aliasMatch || hay.includes(nQ)) results.push({ cat, typ, code, sub, ci, ti, ki, si: bi });
+          }
+        }
+        if (results.length >= 200) return results;
+      }
+    }
+  }
+  return results;
+}
+
+function renderSearch() {
+  const q = state.query.trim();
+  let html = '';
+  if (!q) {
+    html += '<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">Escribí cualquier término</div><div class="empty-sub">En español o inglés. Ej: "lodo", "rig up", "calibración", "WITS", "Computer Server"</div></div>';
+    main.innerHTML = html;
+    return;
+  }
+  const results = searchAll(q);
+  if (results.length === 0) {
+    html += '<div class="empty"><div class="empty-icon">∅</div><div class="empty-title">Sin coincidencias</div><div class="empty-sub">No se encontró "' + escapeHtml(q) + '"</div></div>';
+    main.innerHTML = html;
+    return;
+  }
+  html += '<div class="section-title">' + results.length + (results.length >= 200 ? '+ ' : ' ') + (results.length === 1 ? 'resultado' : 'resultados') + '</div>';
+  for (const r of results) {
+    const leafEn = r.sub ? r.sub.en : r.code.en;
+    const leafEs = r.sub ? r.sub.es : r.code.es;
+    const leafLabel = r.sub ? 'Subcódigo' : 'Código';
+    html += '<div class="match-card">';
+    html += '<div class="match-path">';
+    html += '<span class="pseg">' + highlight(r.cat.en, q) + ' · ' + highlight(r.cat.es, q) + '</span>';
+    html += '<span class="psep">›</span>';
+    html += '<span class="pseg">' + highlight(r.typ.en, q) + ' · ' + highlight(r.typ.es, q) + '</span>';
+    if (r.sub) {
+      html += '<span class="psep">›</span>';
+      html += '<span class="pseg">' + highlight(r.code.en, q) + ' · ' + highlight(r.code.es, q) + '</span>';
+    }
+    html += '</div>';
+    html += '<div class="match-leaf">';
+    html += '<div class="match-leaf-text">';
+    html += '<div class="sub-label">' + leafLabel + '</div>';
+    html += '<div class="match-en">' + highlight(leafEn, q) + '</div>';
+    html += '<div class="match-es">' + highlight(leafEs, q) + '</div>';
+    html += '</div>';
+    html += '<button class="copy-btn" data-copy="' + escapeAttr(leafEn) + '"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>Copiar</span></button>';
+    html += '</div>';
+    html += '<div style="display:flex;gap:6px;flex-wrap:wrap">';
+    html += '<button class="copy-btn goto-btn" data-go="' + r.ci + ',' + r.ti + ',' + r.ki + ',' + r.si + '"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg><span>Cargar en formulario</span></button>';
+    html += '</div>';
+    html += '</div>';
+  }
+  main.innerHTML = html;
+
+  main.querySelectorAll('.copy-btn[data-copy]').forEach(el => {
+    el.addEventListener('click', (e) => { e.stopPropagation(); copyText(el.dataset.copy, el); });
+  });
+  main.querySelectorAll('.goto-btn').forEach(el => {
+    el.addEventListener('click', () => {
+      const [ci, ti, ki, si] = el.dataset.go.split(',').map(Number);
+      state.catIdx = ci; state.typIdx = ti; state.codeIdx = ki; state.subIdx = si;
+      state.mode = 'form'; state.query = '';
+      searchInput.value = ''; searchInput.classList.remove('has-value');
+      document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.mode === 'form'));
+      renderForm();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+}
+
+function setMode(m) {
+  state.mode = m;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.mode === m));
+  if (m === 'form') renderForm();
+  else renderSearch();
+}
+
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => setMode(t.dataset.mode));
+});
+
+searchInput.addEventListener('input', (e) => {
+  state.query = e.target.value;
+  searchInput.classList.toggle('has-value', !!state.query);
+  if (state.query) {
+    if (state.mode !== 'search') setMode('search');
+    else renderSearch();
+  } else {
+    if (state.mode === 'search') renderSearch();
+  }
+});
+clearBtn.addEventListener('click', () => {
+  searchInput.value = ''; state.query = '';
+  searchInput.classList.remove('has-value');
+  searchInput.focus();
+  if (state.mode === 'search') renderSearch();
+});
+
+renderForm();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(err => console.log('SW reg failed:', err));
+  });
+}
+</script>
+</body>
+</html>
