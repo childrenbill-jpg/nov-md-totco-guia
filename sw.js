@@ -1,7 +1,7 @@
-// NOV MD Totco - Service Worker
-// Cachea la app completa para uso offline
+// NOV MD Totco - Service Worker v2
+// Cambiar el número de versión cuando se actualiza el contenido
 
-const CACHE_NAME = 'nov-mdtotco-v1';
+const CACHE_NAME = 'nov-mdtotco-v2';
 const URLS = [
   './',
   './index.html',
@@ -32,7 +32,6 @@ self.addEventListener('fetch', (event) => {
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
       return fetch(event.request).then((response) => {
-        // Solo cachear respuestas exitosas del mismo origen
         if (response.ok && new URL(event.request.url).origin === self.location.origin) {
           const copy = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));

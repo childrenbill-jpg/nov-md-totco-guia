@@ -1,52 +1,30 @@
-# NOV MD Totco · Guía de Incidentes (PWA)
+# NOV MD Totco · Guía de Incidentes (v2)
 
-Guía interactiva de categorización de incidentes en español/inglés.
+## Novedades de esta versión
+- ⭐ **Sistema de favoritos**: tocá la estrella al lado del subcódigo para guardarlo
+- 📌 **Pestaña "Favoritos"**: nueva pestaña con todos los subcódigos guardados
+- 🎨 **Logo NOV oficial** en el ícono de la app
+- 🔄 **Actualización automática** en celulares ya instalados (gracias al cambio de versión del Service Worker)
 
-## Cómo publicar (gratis, 5 minutos) — GitHub Pages
+## Cómo subir esta actualización al repositorio existente
 
-### Paso 1: Crear cuenta en GitHub
-1. Ir a https://github.com y registrarse (es gratis, solo email).
+1. Ir a https://github.com/childrenbill-jpg/guia-tecnicos-nov (o el nombre que le hayas puesto al repo)
+2. Click en cada archivo viejo y reemplazarlo por el nuevo:
+   - `index.html` ← reemplazar
+   - `sw.js` ← reemplazar (importante para forzar actualización)
+   - `icon-192.png` ← reemplazar (ahora tiene el logo NOV)
+   - `icon-512.png` ← reemplazar (ahora tiene el logo NOV)
+   - `manifest.json` ← reemplazar (sin cambios pero por las dudas)
+3. O más fácil: borrar todos los archivos del repositorio y subir los nuevos arrastrando.
 
-### Paso 2: Crear el repositorio
-1. Click en el botón verde "**New**" o ir a https://github.com/new
-2. Nombre del repositorio: `nov-md-totco-guia` (o lo que prefieras).
-3. Marcar como "**Public**".
-4. Click "**Create repository**".
+## Cómo renombrar el repositorio a "guia-tecnicos-nov"
 
-### Paso 3: Subir los archivos
-1. En la página del repositorio, click "**uploading an existing file**" (o arrastrar los archivos).
-2. Subir los 5 archivos de esta carpeta:
-   - `index.html`
-   - `manifest.json`
-   - `sw.js`
-   - `icon-192.png`
-   - `icon-512.png`
-3. Click "**Commit changes**".
+1. Ir al repositorio en GitHub.
+2. Click en **Settings** (engranaje arriba a la derecha).
+3. En la primera sección "Repository name" cambiar `nov-md-totco-guia` por `guia-tecnicos-nov`.
+4. Click en **Rename**.
+5. Tu nueva URL será: **https://childrenbill-jpg.github.io/guia-tecnicos-nov/**
+6. La URL vieja seguirá redirigiendo automáticamente al nuevo nombre por un tiempo, pero conviene actualizar el link compartido.
 
-### Paso 4: Activar GitHub Pages
-1. En el repositorio, ir a **Settings** (engranaje arriba a la derecha).
-2. En el menú lateral izquierdo, click "**Pages**".
-3. En "Source", elegir: Branch = `main`, Folder = `/ (root)`.
-4. Click "**Save**".
-5. Esperar 1-2 minutos. GitHub te mostrará una URL del estilo:
-   `https://TU_USUARIO.github.io/nov-md-totco-guia/`
-
-### Paso 5: Compartir e instalar
-1. Mandar la URL por WhatsApp/email a los técnicos.
-2. En el celular, abrir la URL con **Chrome (Android)** o **Safari (iPhone)**.
-3. **Android (Chrome):** aparecerá un banner "Instalar app" o ir a menú ⋮ → "**Instalar app**" / "**Agregar a pantalla de inicio**".
-4. **iPhone (Safari):** tocar el botón Compartir 📤 → "**Agregar a pantalla de inicio**".
-5. Listo: queda como app con el ícono rojo NOV. Funciona offline una vez instalada.
-
-## Alternativas a GitHub Pages
-- **Netlify Drop** (https://app.netlify.com/drop): aún más simple, arrastrar la carpeta y listo.
-- **Cloudflare Pages**, **Vercel**: también gratis.
-
-## Actualizar la app
-Si querés actualizar el contenido (nuevos términos, etc.):
-1. Reemplazás `index.html` en GitHub.
-2. **Importante:** abrí `sw.js` y cambiá la línea `const CACHE_NAME = 'nov-mdtotco-v1';` por `'nov-mdtotco-v2'` (sumá un número). Esto fuerza a los celulares a actualizar.
-3. Los técnicos verán los cambios la próxima vez que abran la app con internet.
-
-## Soporte
-Esta PWA funciona offline. La primera vez requiere internet para descargarse; después funciona sin conexión.
+## Para los técnicos que ya instalaron la app
+La próxima vez que abran la app con internet, automáticamente se descargará la versión nueva con favoritos y logo. Si no se actualiza al instante, basta con cerrar y abrir la app de nuevo.
