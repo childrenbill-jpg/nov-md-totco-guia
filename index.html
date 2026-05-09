@@ -15,20 +15,16 @@
 <title>NOV MD Totco · Guía de Incidentes</title>
 <style>
 :root {
-  /* Paleta corporativa: rojo NOV + grises + pasteles */
   --bg: #f4f5f7;
   --bg-card: #ffffff;
   --bg-soft: #fafbfc;
   --bg-muted: #eef0f3;
-
   --border: #dde1e7;
   --border-strong: #c5cad3;
-
   --nov-red: #c8102e;
   --nov-red-dark: #a50d24;
   --nov-red-soft: #fde8eb;
   --nov-red-soft-2: #f9d4d9;
-
   --gray-900: #1f2937;
   --gray-700: #374151;
   --gray-600: #4b5563;
@@ -37,18 +33,17 @@
   --gray-300: #d1d5db;
   --gray-200: #e5e7eb;
   --gray-100: #f3f4f6;
-
   --text: #1f2937;
   --text-dim: #4b5563;
   --text-faint: #6b7280;
-
-  /* Pasteles para acentos suaves */
   --pastel-blue: #dbeafe;
   --pastel-blue-text: #1e40af;
   --pastel-green: #d1fae5;
   --pastel-green-text: #065f46;
   --pastel-amber: #fef3c7;
   --pastel-amber-text: #92400e;
+  --gold: #f59e0b;
+  --gold-soft: #fef3c7;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body {
@@ -75,6 +70,9 @@ header.top {
   display: grid; place-items: center;
   font-weight: 800; font-size: 13px; color: white; letter-spacing: -0.5px;
   box-shadow: 0 2px 8px rgba(200, 16, 46, 0.25);
+  background-image: url('icon-192.png');
+  background-size: cover;
+  background-position: center;
 }
 .brand h1 {
   font-size: 14px; font-weight: 700;
@@ -96,10 +94,7 @@ header.top {
   transition: border-color 0.15s, box-shadow 0.15s;
   box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
-.search:focus {
-  border-color: var(--nov-red);
-  box-shadow: 0 0 0 3px var(--nov-red-soft);
-}
+.search:focus { border-color: var(--nov-red); box-shadow: 0 0 0 3px var(--nov-red-soft); }
 .search::placeholder { color: var(--gray-400); }
 .search-icon {
   position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
@@ -124,14 +119,20 @@ header.top {
   font-family: inherit; font-size: 13px; font-weight: 600;
   padding: 10px 8px; border-radius: 7px; cursor: pointer;
   transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
 }
 .tab.active {
-  background: var(--bg-card);
-  color: var(--nov-red);
+  background: var(--bg-card); color: var(--nov-red);
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
+.tab .badge {
+  background: var(--gold-soft); color: var(--pastel-amber-text);
+  font-size: 10px; font-weight: 700;
+  padding: 1px 6px; border-radius: 10px;
+  min-width: 18px; text-align: center;
+}
+.tab.active .badge { background: var(--nov-red-soft); color: var(--nov-red); }
 
-/* === FORM === */
 .form-block { display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px; }
 .field { display: flex; flex-direction: column; gap: 6px; }
 .field-label {
@@ -201,7 +202,35 @@ select.select:disabled {
 }
 .reset-btn:hover { border-color: var(--nov-red); color: var(--nov-red); }
 
-/* === FINAL CARD === */
+/* Star button (favorito) integrado en el select de subcódigo */
+.sub-row-with-star {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+.sub-row-with-star .select-wrap { flex: 1; }
+.star-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  width: 50px;
+  cursor: pointer;
+  display: grid; place-items: center;
+  transition: all 0.15s;
+  font-size: 22px;
+  flex-shrink: 0;
+  color: var(--gray-300);
+  padding: 0;
+}
+.star-btn:hover { border-color: var(--gold); }
+.star-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.star-btn.active {
+  background: var(--gold-soft);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.star-btn.active:hover { background: var(--gold); color: white; }
+
 .final-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -247,21 +276,16 @@ select.select:disabled {
 .final-row .value-text { flex: 1; min-width: 0; }
 .final-en {
   font-size: 14px; font-weight: 600;
-  color: var(--gray-900);
-  word-break: break-word;
+  color: var(--gray-900); word-break: break-word;
 }
 .final-es {
   font-size: 12px; color: var(--text-faint);
-  margin-top: 2px; word-break: break-word;
-  font-style: italic;
+  margin-top: 2px; word-break: break-word; font-style: italic;
 }
 .final-pending {
-  color: var(--gray-400);
-  font-style: italic;
-  font-weight: 400;
-  font-size: 13px;
+  color: var(--gray-400); font-style: italic;
+  font-weight: 400; font-size: 13px;
 }
-
 .copy-btn {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -278,11 +302,8 @@ select.select:disabled {
 }
 .copy-btn:hover { border-color: var(--nov-red); color: var(--nov-red); background: var(--nov-red-soft); }
 .copy-btn.copied {
-  background: var(--pastel-green);
-  border-color: var(--pastel-green-text);
-  color: var(--pastel-green-text);
+  background: var(--pastel-green); border-color: var(--pastel-green-text); color: var(--pastel-green-text);
 }
-
 .final-actions {
   padding: 14px 16px;
   background: var(--nov-red-soft);
@@ -290,26 +311,15 @@ select.select:disabled {
   display: flex; gap: 8px; flex-wrap: wrap;
 }
 .btn-primary {
-  background: var(--nov-red);
-  border: 1px solid var(--nov-red);
-  color: white;
-  padding: 12px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 700;
+  background: var(--nov-red); border: 1px solid var(--nov-red);
+  color: white; padding: 12px 16px; border-radius: 8px;
+  cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 700;
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  transition: all 0.15s;
-  flex: 1;
+  transition: all 0.15s; flex: 1;
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 .btn-primary:hover { background: var(--nov-red-dark); }
-.btn-primary.copied {
-  background: var(--pastel-green-text);
-  border-color: var(--pastel-green-text);
-  color: white;
-}
+.btn-primary.copied { background: var(--pastel-green-text); border-color: var(--pastel-green-text); color: white; }
 
 .section-title {
   font-size: 12px; font-weight: 700;
@@ -322,7 +332,6 @@ select.select:disabled {
   background: var(--border);
 }
 
-/* === SEARCH RESULTS === */
 .match-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -350,13 +359,57 @@ select.select:disabled {
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
-mark {
-  background: var(--pastel-amber);
-  color: var(--pastel-amber-text);
-  padding: 0 2px;
-  border-radius: 3px;
-  font-weight: 600;
+mark { background: var(--pastel-amber); color: var(--pastel-amber-text); padding: 0 2px; border-radius: 3px; font-weight: 600; }
+
+.fav-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
+.fav-path {
+  font-size: 11px; color: var(--text-faint);
+  display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
+}
+.fav-path .pseg { color: var(--text-dim); }
+.fav-path .psep { color: var(--gold); font-weight: 700; }
+.fav-content {
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.fav-text { flex: 1; min-width: 0; }
+.fav-en { font-size: 14px; font-weight: 600; color: var(--gray-900); word-break: break-word; }
+.fav-es { font-size: 12px; color: var(--text-faint); margin-top: 2px; word-break: break-word; font-style: italic; }
+.fav-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.fav-actions .copy-btn { flex: 1; justify-content: center; }
+.btn-load {
+  background: var(--gold); border: 1px solid var(--gold);
+  color: white; padding: 8px 12px;
+  border-radius: 8px; cursor: pointer;
+  font-family: inherit; font-size: 12px; font-weight: 700;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: all 0.15s;
+  flex: 1; justify-content: center;
+}
+.btn-load:hover { background: #d97706; }
+.btn-remove {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--gray-500);
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit; font-size: 12px;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.btn-remove:hover { border-color: var(--nov-red); color: var(--nov-red); background: var(--nov-red-soft); }
 
 .empty {
   text-align: center;
@@ -366,32 +419,27 @@ mark {
   border: 1px dashed var(--border);
   border-radius: 12px;
 }
-.empty-icon { font-size: 28px; margin-bottom: 10px; opacity: 0.5; }
+.empty-icon { font-size: 32px; margin-bottom: 10px; opacity: 0.6; }
 .empty-title { font-size: 14px; color: var(--gray-700); margin-bottom: 4px; font-weight: 600; }
 .empty-sub { font-size: 12px; color: var(--text-faint); }
 
 .toast {
   position: fixed; bottom: 24px; left: 50%;
   transform: translateX(-50%) translateY(120px);
-  background: var(--gray-900);
-  color: white;
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 13px;
+  background: var(--gray-900); color: white;
+  padding: 12px 20px; border-radius: 10px;
+  font-weight: 600; font-size: 13px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 100;
-  max-width: 90vw;
-  text-align: center;
+  z-index: 100; max-width: 90vw; text-align: center;
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
+.toast.gold { background: var(--gold); }
 
 footer.bottom {
   margin-top: 32px; padding-top: 16px;
   border-top: 1px solid var(--border);
-  text-align: center;
-  font-size: 11px;
+  text-align: center; font-size: 11px;
   color: var(--text-faint);
 }
 
@@ -403,6 +451,8 @@ footer.bottom {
   .final-en { font-size: 13px; }
   .final-row .label-col { flex: 0 0 110px; font-size: 11px; padding: 12px 10px 12px 14px; }
   .final-row .value-col { padding: 10px; }
+  .star-btn { width: 44px; font-size: 20px; }
+  .tab { font-size: 12px; padding: 10px 4px; }
 }
 </style>
 </head>
@@ -410,7 +460,7 @@ footer.bottom {
 <div class="app">
   <header class="top">
     <div class="brand">
-      <div class="logo">NOV</div>
+      <div class="logo"></div>
       <div>
         <h1>MD Totco · Guía de incidentes</h1>
         <div class="sub">EN ⇄ ES · 27 categorías · 981 subcódigos</div>
@@ -426,6 +476,7 @@ footer.bottom {
     <div class="tabs" id="tabs">
       <button class="tab active" data-mode="form">Formulario</button>
       <button class="tab" data-mode="search">Buscar</button>
+      <button class="tab" data-mode="favs">⭐ Favoritos<span class="badge" id="favBadge" style="display:none">0</span></button>
     </div>
   </header>
 
@@ -445,14 +496,66 @@ const ALIASES = {
   'computer server': 'Workstations/Servers'
 };
 
+const FAV_KEY = 'novmdtotco_favs_v1';
+
 const state = {
   mode: 'form',
   catIdx: -1,
   typIdx: -1,
   codeIdx: -1,
   subIdx: -1,
-  query: ''
+  query: '',
+  favs: []
 };
+
+// === Persistencia favoritos ===
+function loadFavs() {
+  try {
+    const raw = localStorage.getItem(FAV_KEY);
+    state.favs = raw ? JSON.parse(raw) : [];
+  } catch(e) { state.favs = []; }
+}
+function saveFavs() {
+  try { localStorage.setItem(FAV_KEY, JSON.stringify(state.favs)); } catch(e) {}
+  updateFavBadge();
+}
+function updateFavBadge() {
+  const b = document.getElementById('favBadge');
+  if (!b) return;
+  if (state.favs.length > 0) {
+    b.style.display = '';
+    b.textContent = state.favs.length;
+  } else {
+    b.style.display = 'none';
+  }
+}
+function favKey(catEn, typEn, codeEn, subEn) {
+  return [catEn, typEn, codeEn, subEn].join(' ▸ ');
+}
+function isFav(catEn, typEn, codeEn, subEn) {
+  const k = favKey(catEn, typEn, codeEn, subEn);
+  return state.favs.some(f => f.key === k);
+}
+function toggleFav(cat, typ, code, sub) {
+  const k = favKey(cat.en, typ.en, code.en, sub.en);
+  const idx = state.favs.findIndex(f => f.key === k);
+  if (idx >= 0) {
+    state.favs.splice(idx, 1);
+    saveFavs();
+    return false;
+  } else {
+    state.favs.unshift({
+      key: k,
+      cat: { en: cat.en, es: cat.es },
+      typ: { en: typ.en, es: typ.es },
+      code: { en: code.en, es: code.es },
+      sub: { en: sub.en, es: sub.es },
+      ts: Date.now()
+    });
+    saveFavs();
+    return true;
+  }
+}
 
 const $ = (sel) => document.querySelector(sel);
 const main = $('#main');
@@ -484,6 +587,13 @@ function highlight(text, q) {
   return escapeHtml(text.slice(0, startOrig)) + '<mark>' + escapeHtml(text.slice(startOrig, endOrig)) + '</mark>' + escapeHtml(text.slice(endOrig));
 }
 
+function showToast(msg, gold = false) {
+  toast.textContent = msg;
+  toast.classList.toggle('gold', gold);
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 1700);
+}
+
 function copyText(text, btn) {
   const t = (text || '').toString();
   const onSuccess = () => {
@@ -493,9 +603,7 @@ function copyText(text, btn) {
       btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>OK</span>';
       setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = orig; }, 1400);
     }
-    toast.textContent = 'Copiado: ' + (t.length > 50 ? t.slice(0, 50) + '…' : t);
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 1700);
+    showToast('Copiado: ' + (t.length > 50 ? t.slice(0, 50) + '…' : t));
   };
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(t).then(onSuccess).catch(() => fallbackCopy(t, onSuccess));
@@ -559,6 +667,8 @@ function renderForm() {
   const code = (typ && ki >= 0) ? typ.codes[ki] : null;
   const sub = (code && si >= 0) ? code.subs[si] : null;
 
+  const isFavorite = (cat && typ && code && sub) ? isFav(cat.en, typ.en, code.en, sub.en) : false;
+
   let html = '';
   html += '<div class="form-block">';
 
@@ -607,9 +717,10 @@ function renderForm() {
   html += '</select></div>';
   html += '</div>';
 
-  // 4. Sub Code
+  // 4. Sub Code (con estrella ⭐ al lado)
   html += '<div class="field">';
   html += '<label class="field-label" for="subSel"><span class="num">4</span><span class="req">*</span> Resolution Sub Code · Subcódigo</label>';
+  html += '<div class="sub-row-with-star">';
   html += '<div class="select-wrap"><select id="subSel" class="select' + (si >= 0 ? ' filled' : '') + '"' + (ki < 0 || (code && code.subs.length === 0) ? ' disabled' : '') + '>';
   if (ki < 0) {
     html += '<option value="-1">— Primero seleccioná el código —</option>';
@@ -619,10 +730,18 @@ function renderForm() {
     html += '<option value="-1">— Seleccionar subcódigo —</option>';
     code.subs.forEach((s, i) => {
       const sel = i === si ? ' selected' : '';
-      html += '<option value="' + i + '"' + sel + '>' + escapeHtml(s.en) + ' · ' + escapeHtml(s.es) + '</option>';
+      const star = isFav(cat.en, typ.en, code.en, s.en) ? '⭐ ' : '';
+      html += '<option value="' + i + '"' + sel + '>' + star + escapeHtml(s.en) + ' · ' + escapeHtml(s.es) + '</option>';
     });
   }
   html += '</select></div>';
+
+  // Estrella - solo activa cuando hay subcódigo seleccionado
+  const starDisabled = !sub;
+  html += '<button class="star-btn' + (isFavorite ? ' active' : '') + '" id="starBtn"' + (starDisabled ? ' disabled' : '') + ' title="' + (isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos') + '">';
+  html += isFavorite ? '★' : '☆';
+  html += '</button>';
+  html += '</div>';
   html += '</div>';
 
   if (ci >= 0 || ti >= 0 || ki >= 0 || si >= 0) {
@@ -685,6 +804,18 @@ function wireForm() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
+  const starBtn = document.getElementById('starBtn');
+  if (starBtn) {
+    starBtn.addEventListener('click', () => {
+      const cat = DATA[state.catIdx];
+      const typ = cat.types[state.typIdx];
+      const code = typ.codes[state.codeIdx];
+      const sub = code.subs[state.subIdx];
+      const added = toggleFav(cat, typ, code, sub);
+      showToast(added ? '⭐ Agregado a favoritos' : 'Quitado de favoritos', added);
+      renderForm();
+    });
+  }
   main.querySelectorAll('.copy-btn[data-copy]').forEach(el => {
     el.addEventListener('click', (e) => { e.stopPropagation(); copyText(el.dataset.copy, el); });
   });
@@ -704,6 +835,92 @@ function wireForm() {
       copyText(text, copyAllBtn);
     });
   }
+}
+
+function findIndices(catEn, typEn, codeEn, subEn) {
+  for (let ci = 0; ci < DATA.length; ci++) {
+    if (DATA[ci].en !== catEn) continue;
+    for (let ti = 0; ti < DATA[ci].types.length; ti++) {
+      if (DATA[ci].types[ti].en !== typEn) continue;
+      for (let ki = 0; ki < DATA[ci].types[ti].codes.length; ki++) {
+        if (DATA[ci].types[ti].codes[ki].en !== codeEn) continue;
+        for (let si = 0; si < DATA[ci].types[ti].codes[ki].subs.length; si++) {
+          if (DATA[ci].types[ti].codes[ki].subs[si].en === subEn) {
+            return { ci, ti, ki, si };
+          }
+        }
+      }
+    }
+  }
+  return null;
+}
+
+function renderFavs() {
+  let html = '';
+  if (state.favs.length === 0) {
+    html += '<div class="empty"><div class="empty-icon">⭐</div><div class="empty-title">Todavía no tenés favoritos</div><div class="empty-sub">Tocá la estrella ☆ al lado del subcódigo para guardarlo. Aparecerá acá para acceso rápido.</div></div>';
+    main.innerHTML = html;
+    return;
+  }
+
+  html += '<div class="section-title">' + state.favs.length + (state.favs.length === 1 ? ' favorito' : ' favoritos guardados') + '</div>';
+
+  for (let idx = 0; idx < state.favs.length; idx++) {
+    const f = state.favs[idx];
+    html += '<div class="fav-card">';
+    html += '<div class="fav-path">';
+    html += '<span class="pseg">' + escapeHtml(f.cat.en) + '</span>';
+    html += '<span class="psep">›</span>';
+    html += '<span class="pseg">' + escapeHtml(f.typ.en) + '</span>';
+    html += '<span class="psep">›</span>';
+    html += '<span class="pseg">' + escapeHtml(f.code.en) + '</span>';
+    html += '</div>';
+    html += '<div class="fav-content">';
+    html += '<div class="fav-text">';
+    html += '<div class="sub-label">Subcódigo</div>';
+    html += '<div class="fav-en">' + escapeHtml(f.sub.en) + '</div>';
+    html += '<div class="fav-es">' + escapeHtml(f.sub.es) + '</div>';
+    html += '</div>';
+    html += '</div>';
+    html += '<div class="fav-actions">';
+    html += '<button class="btn-load" data-load="' + idx + '"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg> Cargar</button>';
+    html += '<button class="copy-btn" data-copy="' + escapeAttr(f.sub.en) + '"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>Copiar</span></button>';
+    html += '<button class="btn-remove" data-remove="' + idx + '" title="Quitar de favoritos"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>';
+    html += '</div>';
+    html += '</div>';
+  }
+
+  main.innerHTML = html;
+
+  main.querySelectorAll('[data-load]').forEach(el => {
+    el.addEventListener('click', () => {
+      const idx = parseInt(el.dataset.load);
+      const f = state.favs[idx];
+      const indices = findIndices(f.cat.en, f.typ.en, f.code.en, f.sub.en);
+      if (!indices) {
+        showToast('Favorito no encontrado en el catálogo');
+        return;
+      }
+      state.catIdx = indices.ci;
+      state.typIdx = indices.ti;
+      state.codeIdx = indices.ki;
+      state.subIdx = indices.si;
+      setMode('form');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+  main.querySelectorAll('[data-remove]').forEach(el => {
+    el.addEventListener('click', () => {
+      const idx = parseInt(el.dataset.remove);
+      state.favs.splice(idx, 1);
+      saveFavs();
+      renderFavs();
+      showToast('Favorito eliminado');
+    });
+  });
+  main.querySelectorAll('.copy-btn[data-copy]').forEach(el => {
+    el.addEventListener('click', (e) => { e.stopPropagation(); copyText(el.dataset.copy, el); });
+  });
 }
 
 function searchAll(q) {
@@ -787,10 +1004,9 @@ function renderSearch() {
     el.addEventListener('click', () => {
       const [ci, ti, ki, si] = el.dataset.go.split(',').map(Number);
       state.catIdx = ci; state.typIdx = ti; state.codeIdx = ki; state.subIdx = si;
-      state.mode = 'form'; state.query = '';
+      state.query = '';
       searchInput.value = ''; searchInput.classList.remove('has-value');
-      document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.mode === 'form'));
-      renderForm();
+      setMode('form');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
@@ -800,7 +1016,8 @@ function setMode(m) {
   state.mode = m;
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.mode === m));
   if (m === 'form') renderForm();
-  else renderSearch();
+  else if (m === 'search') renderSearch();
+  else if (m === 'favs') renderFavs();
 }
 
 document.querySelectorAll('.tab').forEach(t => {
@@ -824,9 +1041,11 @@ clearBtn.addEventListener('click', () => {
   if (state.mode === 'search') renderSearch();
 });
 
+// Init
+loadFavs();
+updateFavBadge();
 renderForm();
 </script>
-
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
