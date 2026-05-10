@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nov-mdtotco-v5';
+const CACHE_NAME = 'nov-mdtotco-v6';
 const URLS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', (event) => {
